@@ -44,20 +44,58 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
-    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Migrations\202107281115175_AddPerson.cs" />
-    <Compile Include="Migrations\202107281115175_AddPerson.designer.cs">
-      <DependentUpon>202107281115175_AddPerson.cs</DependentUpon>
+    <Compile Include="ERD.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERD.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ERD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ERD.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ERD.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202108031429117_baseERM.cs" />
+    <Compile Include="Migrations\202108031429117_baseERM.designer.cs">
+      <DependentUpon>202108031429117_baseERM.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Municipality.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Person.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Rule.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Street.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaxDeclaration.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaxDeclarationAttribute.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TaxDeclarationEntry.cs">
+      <DependentUpon>ERD.tt</DependentUpon>
+    </Compile>
     <Compile Include="TIAE6Context.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="Program.cs" />
@@ -65,12 +103,34 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <EntityDeploy Include="ERD.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ERD.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="ERD.edmx.diagram">
+      <DependentUpon>ERD.edmx</DependentUpon>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202107281115175_AddPerson.resx">
-      <DependentUpon>202107281115175_AddPerson.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202108031429117_baseERM.resx">
+      <DependentUpon>202108031429117_baseERM.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ERD.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ERD.Context.cs</LastGenOutput>
+      <DependentUpon>ERD.edmx</DependentUpon>
+    </Content>
+    <Content Include="ERD.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ERD.edmx</DependentUpon>
+      <LastGenOutput>ERD.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

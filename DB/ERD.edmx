@@ -1,0 +1,519 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Municipalities">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="People">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="firstName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="lastName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="streetNumber" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="street_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Rules">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="rule" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="order" Type="int" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="Discriminator" Type="nvarchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Streets">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="postalCode" Type="int" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="municipality_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TaxDeclarationAttributes">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TaxDeclarationEntries">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="value" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="attribute_id" Type="int" Nullable="false" />
+          <Property Name="createdByRule_id" Type="int" />
+          <Property Name="taxDeclaration_id" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TaxDeclarations">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="year" Type="int" Nullable="false" />
+          <Property Name="isApproved" Type="bit" Nullable="false" />
+          <Property Name="isSent" Type="bit" Nullable="false" />
+          <Property Name="createdAt" Type="datetime" Nullable="false" />
+          <Property Name="modifiedAt" Type="datetime" Nullable="false" />
+          <Property Name="person_id" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_dbo_People_dbo_Streets_street_id">
+          <End Role="Streets" Type="Self.Streets" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="People" Type="Self.People" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Streets">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="street_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_Streets_dbo_Municipalities_municipality_id">
+          <End Role="Municipalities" Type="Self.Municipalities" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Streets" Type="Self.Streets" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Municipalities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Streets">
+              <PropertyRef Name="municipality_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id">
+          <End Role="Rules" Type="Self.Rules" Multiplicity="0..1" />
+          <End Role="TaxDeclarationEntries" Type="Self.TaxDeclarationEntries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rules">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarationEntries">
+              <PropertyRef Name="createdByRule_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id">
+          <End Role="TaxDeclarationAttributes" Type="Self.TaxDeclarationAttributes" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaxDeclarationEntries" Type="Self.TaxDeclarationEntries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxDeclarationAttributes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarationEntries">
+              <PropertyRef Name="attribute_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id">
+          <End Role="TaxDeclarations" Type="Self.TaxDeclarations" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaxDeclarationEntries" Type="Self.TaxDeclarationEntries" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxDeclarations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarationEntries">
+              <PropertyRef Name="taxDeclaration_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarations_dbo_People_person_id">
+          <End Role="People" Type="Self.People" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaxDeclarations" Type="Self.TaxDeclarations" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="People">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarations">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ModelStoreContainer">
+          <EntitySet Name="Municipalities" EntityType="Self.Municipalities" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="People" EntityType="Self.People" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Rules" EntityType="Self.Rules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Streets" EntityType="Self.Streets" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaxDeclarationAttributes" EntityType="Self.TaxDeclarationAttributes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaxDeclarationEntries" EntityType="Self.TaxDeclarationEntries" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TaxDeclarations" EntityType="Self.TaxDeclarations" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_People_dbo_Streets_street_id" Association="Self.FK_dbo_People_dbo_Streets_street_id">
+            <End Role="Streets" EntitySet="Streets" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_Streets_dbo_Municipalities_municipality_id" Association="Self.FK_dbo_Streets_dbo_Municipalities_municipality_id">
+            <End Role="Municipalities" EntitySet="Municipalities" />
+            <End Role="Streets" EntitySet="Streets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id" Association="Self.FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id">
+            <End Role="Rules" EntitySet="Rules" />
+            <End Role="TaxDeclarationEntries" EntitySet="TaxDeclarationEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id" Association="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id">
+            <End Role="TaxDeclarationAttributes" EntitySet="TaxDeclarationAttributes" />
+            <End Role="TaxDeclarationEntries" EntitySet="TaxDeclarationEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id" Association="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id">
+            <End Role="TaxDeclarations" EntitySet="TaxDeclarations" />
+            <End Role="TaxDeclarationEntries" EntitySet="TaxDeclarationEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarations_dbo_People_person_id" Association="Self.FK_dbo_TaxDeclarations_dbo_People_person_id">
+            <End Role="People" EntitySet="People" />
+            <End Role="TaxDeclarations" EntitySet="TaxDeclarations" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Municipality">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Streets" Relationship="Self.FK_dbo_Streets_dbo_Municipalities_municipality_id" FromRole="Municipalities" ToRole="Streets" />
+        </EntityType>
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="firstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="streetNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="street_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Street" Relationship="Self.FK_dbo_People_dbo_Streets_street_id" FromRole="People" ToRole="Streets" />
+          <NavigationProperty Name="TaxDeclarations" Relationship="Self.FK_dbo_TaxDeclarations_dbo_People_person_id" FromRole="People" ToRole="TaxDeclarations" />
+        </EntityType>
+        <EntityType Name="Rule">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="rule1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="order" Type="Int32" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Discriminator" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="TaxDeclarationEntries" Relationship="Self.FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id" FromRole="Rules" ToRole="TaxDeclarationEntries" />
+        </EntityType>
+        <EntityType Name="Street">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="postalCode" Type="Int32" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="municipality_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Municipality" Relationship="Self.FK_dbo_Streets_dbo_Municipalities_municipality_id" FromRole="Streets" ToRole="Municipalities" />
+          <NavigationProperty Name="People" Relationship="Self.FK_dbo_People_dbo_Streets_street_id" FromRole="Streets" ToRole="People" />
+        </EntityType>
+        <EntityType Name="TaxDeclarationAttribute">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="TaxDeclarationEntries" Relationship="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id" FromRole="TaxDeclarationAttributes" ToRole="TaxDeclarationEntries" />
+        </EntityType>
+        <EntityType Name="TaxDeclarationEntry">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="value" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="attribute_id" Type="Int32" Nullable="false" />
+          <Property Name="createdByRule_id" Type="Int32" />
+          <Property Name="taxDeclaration_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Rule" Relationship="Self.FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id" FromRole="TaxDeclarationEntries" ToRole="Rules" />
+          <NavigationProperty Name="TaxDeclarationAttribute" Relationship="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id" FromRole="TaxDeclarationEntries" ToRole="TaxDeclarationAttributes" />
+          <NavigationProperty Name="TaxDeclaration" Relationship="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id" FromRole="TaxDeclarationEntries" ToRole="TaxDeclarations" />
+        </EntityType>
+        <EntityType Name="TaxDeclaration">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="year" Type="Int32" Nullable="false" />
+          <Property Name="isApproved" Type="Boolean" Nullable="false" />
+          <Property Name="isSent" Type="Boolean" Nullable="false" />
+          <Property Name="createdAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modifiedAt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="person_id" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Person" Relationship="Self.FK_dbo_TaxDeclarations_dbo_People_person_id" FromRole="TaxDeclarations" ToRole="People" />
+          <NavigationProperty Name="TaxDeclarationEntries" Relationship="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id" FromRole="TaxDeclarations" ToRole="TaxDeclarationEntries" />
+        </EntityType>
+        <Association Name="FK_dbo_Streets_dbo_Municipalities_municipality_id">
+          <End Role="Municipalities" Type="Self.Municipality" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Streets" Type="Self.Street" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Municipalities">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="Streets">
+              <PropertyRef Name="municipality_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_People_dbo_Streets_street_id">
+          <End Role="Streets" Type="Self.Street" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="People" Type="Self.Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Streets">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="People">
+              <PropertyRef Name="street_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarations_dbo_People_person_id">
+          <End Role="People" Type="Self.Person" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaxDeclarations" Type="Self.TaxDeclaration" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="People">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarations">
+              <PropertyRef Name="person_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id">
+          <End Role="Rules" Type="Self.Rule" Multiplicity="0..1" />
+          <End Role="TaxDeclarationEntries" Type="Self.TaxDeclarationEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Rules">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarationEntries">
+              <PropertyRef Name="createdByRule_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id">
+          <End Role="TaxDeclarationAttributes" Type="Self.TaxDeclarationAttribute" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaxDeclarationEntries" Type="Self.TaxDeclarationEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxDeclarationAttributes">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarationEntries">
+              <PropertyRef Name="attribute_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id">
+          <End Role="TaxDeclarations" Type="Self.TaxDeclaration" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TaxDeclarationEntries" Type="Self.TaxDeclarationEntry" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TaxDeclarations">
+              <PropertyRef Name="id" />
+            </Principal>
+            <Dependent Role="TaxDeclarationEntries">
+              <PropertyRef Name="taxDeclaration_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Municipalities" EntityType="Self.Municipality" />
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <EntitySet Name="Rules" EntityType="Self.Rule" />
+          <EntitySet Name="Streets" EntityType="Self.Street" />
+          <EntitySet Name="TaxDeclarationAttributes" EntityType="Self.TaxDeclarationAttribute" />
+          <EntitySet Name="TaxDeclarationEntries" EntityType="Self.TaxDeclarationEntry" />
+          <EntitySet Name="TaxDeclarations" EntityType="Self.TaxDeclaration" />
+          <AssociationSet Name="FK_dbo_Streets_dbo_Municipalities_municipality_id" Association="Self.FK_dbo_Streets_dbo_Municipalities_municipality_id">
+            <End Role="Municipalities" EntitySet="Municipalities" />
+            <End Role="Streets" EntitySet="Streets" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_People_dbo_Streets_street_id" Association="Self.FK_dbo_People_dbo_Streets_street_id">
+            <End Role="Streets" EntitySet="Streets" />
+            <End Role="People" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarations_dbo_People_person_id" Association="Self.FK_dbo_TaxDeclarations_dbo_People_person_id">
+            <End Role="People" EntitySet="People" />
+            <End Role="TaxDeclarations" EntitySet="TaxDeclarations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id" Association="Self.FK_dbo_TaxDeclarationEntries_dbo_Rules_createdByRule_id">
+            <End Role="Rules" EntitySet="Rules" />
+            <End Role="TaxDeclarationEntries" EntitySet="TaxDeclarationEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id" Association="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarationAttributes_attribute_id">
+            <End Role="TaxDeclarationAttributes" EntitySet="TaxDeclarationAttributes" />
+            <End Role="TaxDeclarationEntries" EntitySet="TaxDeclarationEntries" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id" Association="Self.FK_dbo_TaxDeclarationEntries_dbo_TaxDeclarations_taxDeclaration_id">
+            <End Role="TaxDeclarations" EntitySet="TaxDeclarations" />
+            <End Role="TaxDeclarationEntries" EntitySet="TaxDeclarationEntries" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Municipalities">
+            <EntityTypeMapping TypeName="Model.Municipality">
+              <MappingFragment StoreEntitySet="Municipalities">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="Model.Person">
+              <MappingFragment StoreEntitySet="People">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="streetNumber" ColumnName="streetNumber" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="street_id" ColumnName="street_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rules">
+            <EntityTypeMapping TypeName="Model.Rule">
+              <MappingFragment StoreEntitySet="Rules">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="rule1" ColumnName="rule" />
+                <ScalarProperty Name="order" ColumnName="order" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="Discriminator" ColumnName="Discriminator" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Streets">
+            <EntityTypeMapping TypeName="Model.Street">
+              <MappingFragment StoreEntitySet="Streets">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="postalCode" ColumnName="postalCode" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="municipality_id" ColumnName="municipality_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaxDeclarationAttributes">
+            <EntityTypeMapping TypeName="Model.TaxDeclarationAttribute">
+              <MappingFragment StoreEntitySet="TaxDeclarationAttributes">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaxDeclarationEntries">
+            <EntityTypeMapping TypeName="Model.TaxDeclarationEntry">
+              <MappingFragment StoreEntitySet="TaxDeclarationEntries">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="attribute_id" ColumnName="attribute_id" />
+                <ScalarProperty Name="createdByRule_id" ColumnName="createdByRule_id" />
+                <ScalarProperty Name="taxDeclaration_id" ColumnName="taxDeclaration_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TaxDeclarations">
+            <EntityTypeMapping TypeName="Model.TaxDeclaration">
+              <MappingFragment StoreEntitySet="TaxDeclarations">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="year" ColumnName="year" />
+                <ScalarProperty Name="isApproved" ColumnName="isApproved" />
+                <ScalarProperty Name="isSent" ColumnName="isSent" />
+                <ScalarProperty Name="createdAt" ColumnName="createdAt" />
+                <ScalarProperty Name="modifiedAt" ColumnName="modifiedAt" />
+                <ScalarProperty Name="person_id" ColumnName="person_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Kein" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

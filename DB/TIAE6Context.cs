@@ -1,7 +1,8 @@
-﻿using System;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace DB
 {
@@ -15,11 +16,13 @@ namespace DB
         public DbSet<TaxDeclaration> taxDeclarations { get; set; }
         public DbSet<TaxDeclarationAttribute> taxDeclarationAttributes { get; set; }
         public DbSet<TaxDeclarationEntry> taxDeclarationEntries { get; set; }
-
-        public TIAE6Context() : base("name=TIAE6ConnectionString")
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-
+            var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.json", true, true);
+            var config = builder.Build();
+            optionsBuilder.UseSqlServer(config["ConnectionString"]);
         }
+
         public override int SaveChanges()
         {
             try
@@ -38,21 +41,54 @@ namespace DB
 
                 return base.SaveChanges();
             }
-            catch (DbEntityValidationException e)
+            catch (DbUpdateException e)
             {
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
-                    }
-                }
-                throw;
+                
             }
+            return base.SaveChanges();
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Seed Data
+            modelBuilder.Entity<Municipality>()
+            .HasData(
+                new Municipality { id = 1, name = "Sitten" }
+            );
 
+            modelBuilder.Entity<Street>()
+            .HasData(
+                new Street
+                {
+                    id = 1,
+                    name = "Bahnhofstrasse",
+                    postalCode = 1950,
+                    municipalityId = 1
+                }
+            );
+
+            modelBuilder.Entity<Person>()
+            .HasData(
+                new Person
+                {
+                    id = 1,
+                    firstName = "André",
+                    lastName = "Glatzl",
+                    streetId = 1,
+                    streetNumber = "1A"
+                }
+            );
+
+            modelBuilder.Entity<Person>()
+            .HasData(
+                new Person
+                {
+                    id = 2,
+                    firstName = "Sven",
+                    lastName = "Gehring",
+                    streetId = 1,
+                    streetNumber = "1B"
+                }
+            );
         }
     }
 }

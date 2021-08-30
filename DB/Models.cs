@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DB
 {
@@ -14,7 +15,7 @@ namespace DB
     {
         [Key]
         public int id { get; set; }
-        
+
         [DataType(DataType.DateTime)]
         public DateTime createdAt { get; set; }
 
@@ -28,6 +29,8 @@ namespace DB
         public string firstName { get; set; }
         [Required]
         public string lastName { get; set; }
+        public int streetId { get; set; }
+        [ForeignKey("streetId")]
         [Required]
         public Street street { get; set; }
         [Required]
@@ -36,7 +39,7 @@ namespace DB
 
     public class Municipality : BaseModel
     {
-        public string name { get; set; } 
+        public string name { get; set; }
     }
 
     public class Street : BaseModel
@@ -45,6 +48,8 @@ namespace DB
         public string name { get; set; }
         [Required]
         public int postalCode { get; set; }
+        public int municipalityId { get; set; }
+        [ForeignKey("municipalityId")]
         [Required]
         public Municipality municipality { get; set; }
     }
@@ -60,6 +65,8 @@ namespace DB
     public class EvaluationRule : Rule { }
     public class TaxDeclaration : BaseModel
     {
+        public int personId { get; set; }
+        [ForeignKey("personId")]
         [Required]
         public Person person { get; set; }
         [Required]
@@ -78,12 +85,18 @@ namespace DB
 
     public class TaxDeclarationEntry : BaseModel
     {
+        public int taxDeclarationId { get; set; }
+        [ForeignKey("taxDeclarationId")]
         [Required]
         public TaxDeclaration taxDeclaration { get; set; }
+        public int taxDeclarationAttributeId { get; set; }
+        [ForeignKey("taxDeclarationAttributeId")]
         [Required]
         public TaxDeclarationAttribute attribute { get; set; }
         [Required]
         public decimal value { get; set; }
+        public int createdByRuleId { get; set; }
+        [ForeignKey("createdByRuleId")]
         public Rule createdByRule { get; set; }
     }
 }

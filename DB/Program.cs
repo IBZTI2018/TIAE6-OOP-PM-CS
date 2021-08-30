@@ -1,21 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Grpc.Core;
 
 namespace DB
 {
-    class Program
+    public class Program
     {
+        public static int DB_PORT = 9001;
         static void Main(string[] args)
         {
-            using (var ctx = new TIAE6Context())
+            try
             {
-                foreach (var person in ctx.persons.ToList())
+                Server server = new Server
                 {
-                    Console.WriteLine("id: " + person.id + ", firstname: " + person.firstName + ", lastname: " + person.lastName);
-                }
+                    Services = { PersonService.BindService(new PersonImpl()) },
+                    Ports = { new ServerPort("localhost", DB_PORT, ServerCredentials.Insecure) }
+                };
+                server.Start();
+                Console.WriteLine("Accounts server listening on port " + DB_PORT);
+                Console.WriteLine("Press any key to stop the server...");
+                Console.ReadKey();
+                server.ShutdownAsync().Wait();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception encountered: {ex}");
             }
         }
     }

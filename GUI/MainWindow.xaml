@@ -1,12 +1,14 @@
-﻿<Window x:Class="Client.MainWindow"
+﻿<Window x:Class="GUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Client"
+        xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <Button Content="GetPerson" HorizontalAlignment="Left" Margin="228,156,0,0" VerticalAlignment="Top" Height="98" Width="204" Click="Button_Click"/>
+        <TextBox x:Name="personId" HorizontalAlignment="Left" Margin="240,103,0,0" Text="id" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+
     </Grid>
 </Window>

@@ -75,27 +75,6 @@
       <DependentUpon>202108031429117_baseERM.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Municipality.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Person.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Rule.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Street.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TaxDeclaration.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TaxDeclarationAttribute.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
-    <Compile Include="TaxDeclarationEntry.cs">
-      <DependentUpon>ERD.tt</DependentUpon>
-    </Compile>
     <Compile Include="TIAE6Context.cs" />
     <Compile Include="Models.cs" />
     <Compile Include="Program.cs" />

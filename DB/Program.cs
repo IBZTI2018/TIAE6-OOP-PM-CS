@@ -16,7 +16,7 @@ namespace DB
                     Ports = { new ServerPort("localhost", DB_PORT, ServerCredentials.Insecure) }
                 };
                 server.Start();
-                Console.WriteLine("Accounts server listening on port " + DB_PORT);
+                Console.WriteLine("Database service listening on port " + DB_PORT);
                 Console.WriteLine("Press any key to stop the server...");
                 Console.ReadKey();
                 server.ShutdownAsync().Wait();

@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace DB.Contracts
+namespace Inferenzmotor.Contracts
 {
     [DataContract]
     public class IDRequest

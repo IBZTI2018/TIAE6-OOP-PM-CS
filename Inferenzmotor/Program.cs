@@ -1,22 +1,31 @@
-﻿using ProtoBuf.Grpc.Client;
-using Grpc.Net.Client;
-using DB.Contracts;
-using System;
-using System.Threading.Tasks;
+﻿using System;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace Inferenzmotor {
   class Program {
-    static void Main(string[] args)
-    {
-            Task.Run(async () => {
-                GrpcClientFactory.AllowUnencryptedHttp2 = true;
-                using (var http = GrpcChannel.ForAddress("http://localhost:" + DB.Program.DB_PORT))
-                {
-                    IPersonService personService = http.CreateGrpcService<IPersonService>();
-                    PersonResponse response = await personService.getPerson(new IDRequest { id = 1 });
-                    Console.WriteLine(response.person.firstName);
-                }
-            }).GetAwaiter().GetResult();
+        public static int INFERENCE_MOTOR_PORT = 9002;
+        static void Main(string[] args)
+        {
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Exception encountered: {ex}");
+            }
+        }
+        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
+          WebHost.CreateDefaultBuilder(args)
+          .ConfigureKestrel(options => {
+              options.ListenLocalhost(Program.INFERENCE_MOTOR_PORT, listenOptions => {
+                  listenOptions.Protocols = HttpProtocols.Http2;
+              });
+          })
+          .UseStartup<Startup>();
     }
-  }
 }

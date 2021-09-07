@@ -1,6 +1,8 @@
-﻿using System;
-using System.Windows;
-using Grpc.Core;
+﻿using System.Windows;
+using ProtoBuf.Grpc.Client;
+using Grpc.Net.Client;
+using DB.Contracts;
+using System;
 
 namespace GUI
 {
@@ -9,25 +11,20 @@ namespace GUI
     /// </summary>
     public partial class MainWindow : Window
     {
-        Channel dbChannel = null;
         public MainWindow()
         {
             InitializeComponent();
-            try
-            {
-                this.dbChannel = new Channel("127.0.0.1:" + DB.Program.DB_PORT, ChannelCredentials.Insecure);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Exception encountered: {ex}");
-            }
+            GrpcClientFactory.AllowUnencryptedHttp2 = true;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            var client = new PersonService.PersonServiceClient(this.dbChannel);
-            PersonResponse response = client.GetPerson(new PersonRequest{ Id = personId.Text });
-            MessageBox.Show(response.FirstName + " " + response.LastName);
+            using (var http = GrpcChannel.ForAddress("http://localhost:" + DB.Program.DB_PORT))
+            {
+                IPersonService personService = http.CreateGrpcService<IPersonService>();
+                PersonResponse response = await personService.getPerson(new IDRequest { id = Int32.Parse(personId.Text) });
+                MessageBox.Show(response.person.firstName);
+            }
         }
     }
 }

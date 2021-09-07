@@ -1,8 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
-using System.Configuration;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 
 namespace DB
 {

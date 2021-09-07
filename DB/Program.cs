@@ -1,5 +1,9 @@
 ﻿using System;
-using Grpc.Core;
+using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 namespace DB
 {
@@ -10,21 +14,20 @@ namespace DB
         {
             try
             {
-                Server server = new Server
-                {
-                    Services = { PersonService.BindService(new PersonImpl()) },
-                    Ports = { new ServerPort("localhost", DB_PORT, ServerCredentials.Insecure) }
-                };
-                server.Start();
-                Console.WriteLine("Database service listening on port " + DB_PORT);
-                Console.WriteLine("Press any key to stop the server...");
-                Console.ReadKey();
-                server.ShutdownAsync().Wait();
+                CreateHostBuilder(args).Build().Run();
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Exception encountered: {ex}");
             }
         }
+        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
+          WebHost.CreateDefaultBuilder(args)
+          .ConfigureKestrel(options => {
+              options.ListenLocalhost(Program.DB_PORT, listenOptions => {
+                  listenOptions.Protocols = HttpProtocols.Http2;
+              });
+          })
+          .UseStartup<Startup>();
     }
 }

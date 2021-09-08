@@ -83,14 +83,19 @@ namespace DB
     [ProtoContract]
     [ProtoInclude(10, typeof(InferenceRule))]
     [ProtoInclude(20, typeof(EvaluationRule))]
-    public abstract class Rule : BaseModel
-    {
-        [Required]
-        [ProtoMember(1)]
-        public string rule { get; set; }
-        [Required]
-        [ProtoMember(2)]
-        public int order { get; set; }
+    public abstract class Rule : BaseModel {
+      [Required]
+      [ProtoMember(1)]
+      public string rule { get; set; }
+      [ForeignKey("parentId")]
+      [ProtoMember(2)]
+      public Rule parent { get; set; }
+      [Required]
+      [ProtoMember(3)]
+      public string condition { get; set; }
+      [Required]
+      [ProtoMember(4)]
+      public string transformation { get; set; }
     }
     [ProtoContract]
     public class InferenceRule : Rule { }

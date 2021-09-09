@@ -1,6 +1,6 @@
 ﻿using System.Runtime.Serialization;
 
-namespace Steuerberechner.Contracts
+namespace Shared.Contracts
 {
     [DataContract]
     public class IDRequest

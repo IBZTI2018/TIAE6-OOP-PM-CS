@@ -7,11 +7,20 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB", "DB\DB.csproj", "{940A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GUI", "GUI\GUI.csproj", "{A0E9D959-191F-4DE6-B3F5-8490E5A39C79}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Inferenzmotor", "Inferenzmotor\Inferenzmotor.csproj", "{B1C63708-4A1C-4459-9C81-2717D66FA0D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Inferenzmotor", "Inferenzmotor\Inferenzmotor.csproj", "{B1C63708-4A1C-4459-9C81-2717D66FA0D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Steuerberechner", "Steuerberechner\Steuerberechner.csproj", "{9F93F600-C026-4F69-84C4-0B16FC745150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Steuerberechner", "Steuerberechner\Steuerberechner.csproj", "{9F93F600-C026-4F69-84C4-0B16FC745150}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Shared", "Shared\Shared.shproj", "{9C581293-48C8-42BA-9A5E-54FACEFEB12B}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Shared\Shared.projitems*{940a3e96-c0a8-4157-bfb7-67e26ef2a34b}*SharedItemsImports = 5
+		Shared\Shared.projitems*{9c581293-48c8-42ba-9a5e-54facefeb12b}*SharedItemsImports = 13
+		Shared\Shared.projitems*{9f93f600-c026-4f69-84c4-0b16fc745150}*SharedItemsImports = 5
+		Shared\Shared.projitems*{a0e9d959-191f-4de6-b3f5-8490e5a39c79}*SharedItemsImports = 5
+		Shared\Shared.projitems*{b1c63708-4a1c-4459-9c81-2717d66fa0d2}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

@@ -2,15 +2,14 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Runtime.Serialization;
 
-namespace DB
+namespace Shared.Models
 {
     public interface IBaseModel
     {
-        int id { get; set; }
-        DateTime createdAt { get; set; }
-        DateTime modifiedAt { get; set; }
+        public int id { get; set; }
+        public DateTime createdAt { get; set; }
+        public DateTime modifiedAt { get; set; }
     }
 
     [ProtoContract]
@@ -21,7 +20,7 @@ namespace DB
     [ProtoInclude(50, typeof(TaxDeclaration))]
     [ProtoInclude(60, typeof(TaxDeclarationAttribute))]
     [ProtoInclude(70, typeof(TaxDeclarationEntry))]
-    public abstract class BaseModel
+    public abstract class BaseModel : IBaseModel
     {
         [Key]
         [ProtoMember(1)]
@@ -83,19 +82,20 @@ namespace DB
     [ProtoContract]
     [ProtoInclude(10, typeof(InferenceRule))]
     [ProtoInclude(20, typeof(EvaluationRule))]
-    public abstract class Rule : BaseModel {
-      [Required]
-      [ProtoMember(1)]
-      public string rule { get; set; }
-      [ForeignKey("parentId")]
-      [ProtoMember(2)]
-      public Rule parent { get; set; }
-      [Required]
-      [ProtoMember(3)]
-      public string condition { get; set; }
-      [Required]
-      [ProtoMember(4)]
-      public string transformation { get; set; }
+    public abstract class Rule : BaseModel
+    {
+        [Required]
+        [ProtoMember(1)]
+        public string rule { get; set; }
+        [ForeignKey("parentId")]
+        [ProtoMember(2)]
+        public Rule parent { get; set; }
+        [Required]
+        [ProtoMember(3)]
+        public string condition { get; set; }
+        [Required]
+        [ProtoMember(4)]
+        public string transformation { get; set; }
     }
     [ProtoContract]
     public class InferenceRule : Rule { }

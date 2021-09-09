@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
 using DB.Contracts;
+using Shared.Contracts;
 
 namespace DB
 {
@@ -26,6 +27,7 @@ namespace DB
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<PersonService>();
+                endpoints.MapGrpcService<StatusService>();
             });
         }
     }

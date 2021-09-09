@@ -2,6 +2,7 @@
 using System;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using Shared.Models;
 
 namespace DB
 {
@@ -40,7 +41,7 @@ namespace DB
 
                 return base.SaveChanges();
             }
-            catch (DbUpdateException e)
+            catch
             {
                 
             }

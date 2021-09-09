@@ -24,7 +24,7 @@ namespace Steuerberechner
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)
           .ConfigureKestrel(options => {
-              options.ListenLocalhost(Program.TAX_CALCULATOR_PORT, listenOptions => {
+              options.ListenLocalhost(Shared.Ports.TAX_PORT, listenOptions => {
                   listenOptions.Protocols = HttpProtocols.Http2;
               });
           })

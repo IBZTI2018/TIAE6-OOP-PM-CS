@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
+using Shared.Contracts;
 using Steuerberechner.Contracts;
 
 namespace Steuerberechner
@@ -26,6 +27,7 @@ namespace Steuerberechner
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<TaxCalculatorService>();
+                endpoints.MapGrpcService<StatusService>();
             });
         }
     }

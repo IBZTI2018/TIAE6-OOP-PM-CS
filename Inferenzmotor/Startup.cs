@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using ProtoBuf.Grpc.Server;
 using Inferenzmotor.Contracts;
+using Shared.Contracts;
 
 namespace Inferenzmotor
 {
@@ -26,6 +27,7 @@ namespace Inferenzmotor
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<InferenceService>();
+                endpoints.MapGrpcService<StatusService>();
             });
         }
     }

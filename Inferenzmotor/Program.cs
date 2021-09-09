@@ -22,7 +22,7 @@ namespace Inferenzmotor {
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)
           .ConfigureKestrel(options => {
-              options.ListenLocalhost(Program.INFERENCE_MOTOR_PORT, listenOptions => {
+              options.ListenLocalhost(Shared.Ports.INFERENCE_PORT, listenOptions => {
                   listenOptions.Protocols = HttpProtocols.Http2;
               });
           })

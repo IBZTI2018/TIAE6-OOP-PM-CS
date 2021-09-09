@@ -9,7 +9,6 @@ namespace DB
 {
     public class Program
     {
-        public static int DB_PORT = 9001;
         static void Main(string[] args)
         {
             try
@@ -24,7 +23,7 @@ namespace DB
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)
           .ConfigureKestrel(options => {
-              options.ListenLocalhost(Program.DB_PORT, listenOptions => {
+              options.ListenLocalhost(Shared.Ports.DB_PORT, listenOptions => {
                   listenOptions.Protocols = HttpProtocols.Http2;
               });
           })

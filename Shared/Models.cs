@@ -87,6 +87,7 @@ namespace Shared.Models
         [Required]
         [ProtoMember(1)]
         public string rule { get; set; }
+        public int? parentId { get; set; }
         [ForeignKey("parentId")]
         [ProtoMember(2)]
         public Rule parent { get; set; }
@@ -148,7 +149,7 @@ namespace Shared.Models
         [ProtoMember(5)]
         public decimal value { get; set; }
         [ProtoMember(6)]
-        public int createdByRuleId { get; set; }
+        public int? createdByRuleId { get; set; }
         [ForeignKey("createdByRuleId")]
         [ProtoMember(7)]
         public Rule createdByRule { get; set; }

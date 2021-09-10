@@ -1,7 +1,10 @@
 ﻿using ProtoBuf;
+using Shared.Structures;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace Shared.Models
 {
@@ -105,6 +108,11 @@ namespace Shared.Models
     [ProtoContract]
     public class TaxDeclaration : BaseModel
     {
+        public TaxDeclaration()
+        {
+            Entries = new HashSet<TaxDeclarationEntry>();
+        }
+
         [ProtoMember(1)]
         public int personId { get; set; }
         [ForeignKey("personId")]
@@ -120,6 +128,8 @@ namespace Shared.Models
         [Required]
         [ProtoMember(5)]
         public bool isSent { get; set; }
+
+        public virtual ICollection<TaxDeclarationEntry> Entries { get; set; }
     }
 
     [ProtoContract]

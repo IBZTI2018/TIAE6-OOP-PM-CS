@@ -8,4 +8,11 @@ namespace Shared.Contracts
         [DataMember(Order = 1)]
         public int id { get; set; }
     }
+
+    [DataContract]
+    public class EmptyRequest
+    {
+        [DataMember(Order = 1)]
+        public int empty = 1;
+    }
 }

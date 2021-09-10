@@ -4,12 +4,24 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Grpc.Net.Client;
+using Shared.Contracts;
+using ProtoBuf.Grpc.Client;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Inferenzmotor {
   class Program {
         public static int INFERENCE_MOTOR_PORT = 9002;
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
+            using (var http = GrpcChannel.ForAddress("http://localhost:" + Shared.Ports.DB_PORT))
+            {
+                ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
+                TaxInformationListResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest { empty = 1 });
+                Console.WriteLine("Got list yeah count(): " + response.taxInformationList.Count);
+            }
+
             try
             {
                 CreateHostBuilder(args).Build().Run();
@@ -18,6 +30,7 @@ namespace Inferenzmotor {
             {
                 Console.WriteLine($"Exception encountered: {ex}");
             }
+
         }
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)

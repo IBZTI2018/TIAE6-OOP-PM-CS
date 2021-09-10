@@ -9,6 +9,7 @@
     <Import_RootNamespace>Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)ExpressionEvaluator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\BaseContracts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\InferenceContracts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\PersonContracts.cs" />
@@ -16,5 +17,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\TaxCalculatorContracts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Ports.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TreeTraversal.cs" />
   </ItemGroup>
 </Project>

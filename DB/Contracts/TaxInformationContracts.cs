@@ -113,12 +113,12 @@ namespace DB.Contracts
             return new ValueTask<TaxInformationListResponse>(response);
         }
 
-        public ValueTask<bool> putCalculatedTaxData(YearlyTaxData request)
+        public ValueTask<BoolResponse> putCalculatedTaxData(YearlyTaxData request)
         {
             throw new NotImplementedException();
         }
 
-        public ValueTask<bool> putInferredTaxData(YearlyTaxData request)
+        public ValueTask<BoolResponse> putInferredTaxData(YearlyTaxData request)
         {
             throw new NotImplementedException();
         }

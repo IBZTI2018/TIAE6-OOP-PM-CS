@@ -15,4 +15,10 @@ namespace Shared.Contracts
         [DataMember(Order = 1)]
         public int empty = 1;
     }
+
+    [DataContract]
+    public class BoolResponse {
+        [DataMember(Order = 1)]
+        public bool success;
+    }
 }

@@ -32,7 +32,7 @@ namespace Shared.Contracts
     {
         public ValueTask<TaxInformationListResponse> getNonInferredWork(EmptyRequest request);
         public ValueTask<TaxInformationListResponse> getNonCalculatedWork(EmptyRequest request);
-        public ValueTask<bool> putInferredTaxData(YearlyTaxData request);
-        public ValueTask<bool> putCalculatedTaxData(YearlyTaxData request);
+        public ValueTask<BoolResponse> putInferredTaxData(YearlyTaxData request);
+        public ValueTask<BoolResponse> putCalculatedTaxData(YearlyTaxData request);
     }
 }

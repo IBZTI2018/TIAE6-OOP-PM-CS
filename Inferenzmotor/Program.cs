@@ -9,33 +9,73 @@ using Shared.Contracts;
 using ProtoBuf.Grpc.Client;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Threading;
+using Shared.Models;
+using Shared.Structures;
+using Shared.TreeTraversal;
 
 namespace Inferenzmotor {
+  class Inferenzmotor {
+    private List<Rule> rules;
+
+    // Worker function to be started in a worker thread
+    public static async void worker()
+    {
+      using (var http = GrpcChannel.ForAddress(Shared.Ports.BASE_HOST + Shared.Ports.DB_PORT))
+      {
+        ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
+        // GET
+        TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
+      }
+    }
+
+    // Load all currently active rules from the database
+    public async void loadRulesFromDatabase()
+    {
+      Console.WriteLine("Loading rules from database...");
+      using (var http = GrpcChannel.ForAddress(Shared.Ports.BASE_HOST + Shared.Ports.DB_PORT))
+      {
+        IRuleService ruleService = http.CreateGrpcService<IRuleService>();
+        InferenceRulesResponse ruleList = await ruleService.getInferenceRules(new EmptyRequest());
+        this.rules = ruleList.rules.ConvertAll(x => (Rule)x);
+
+        Console.WriteLine("Successfully loaded rules from database (" + ruleList.rules.Count.ToString() + ")");
+      }
+    }
+
+    // Infer a dataset based on the stored rules
+    public YearlyTaxData inferDataset(TaxInformation input)
+    {
+      RuleData result = RuleTraversal.traverseRuleTree(this.rules, new RuleData(input.toVariableMap()));
+      return TaxInformation.fromVariableMap(result.data).thisYear;
+    }
+
+    public async void putInferredTaxInformation(TaxInformation input)
+    {
+      Console.WriteLine("Storing inferred tax information in database...");
+      using (var http = GrpcChannel.ForAddress(Shared.Ports.BASE_HOST + Shared.Ports.DB_PORT))
+      {
+        ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
+        BoolResponse putResponse = await taxInformationService.putTaxData(new YearlyTaxDataRequest { taxData = input.thisYear });
+        
+        if (!putResponse.success)
+        {
+          throw new Exception("Failed to store inferred data in database");
+        }
+      }
+    }
+  }
+
   class Program {
-        public static int INFERENCE_MOTOR_PORT = 9002;
         static async Task Main(string[] args)
         {
+            // Allow unencrypted HTTP/2 connections
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
 
-            /**Example GRPC Client Call START**/
-            using (var http = GrpcChannel.ForAddress("http://localhost:" + Shared.Ports.DB_PORT))
-            {
-                ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
-                // GET
-                TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
-
-                // PUT
-                //response.taxInformation.thisYear.income = 999999;
-                //response.taxInformation.thisYear.inferred = false;
-                //BoolResponse putResponse = await taxInformationService.putTaxData(new YearlyTaxDataRequest { taxData = response.taxInformation.thisYear });
-
-                IRuleService ruleService = http.CreateGrpcService<IRuleService>();
-                InferenceRulesResponse ruleList = await ruleService.getInferenceRules(new EmptyRequest());
-                Console.WriteLine("Count Inference Rules: " + ruleList.rules.Count.ToString());
-
-            }
-            /**Example GRPC Client Call END**/
+            // Start inference worker thread
+            Thread thread = new Thread(Inferenzmotor.worker);
+            thread.Start();
 
             try
             {
@@ -47,6 +87,7 @@ namespace Inferenzmotor {
             }
 
         }
+
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)
           .ConfigureKestrel(options => {

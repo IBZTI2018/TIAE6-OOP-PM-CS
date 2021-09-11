@@ -62,29 +62,32 @@ namespace Shared.Structures
         // Tax information for the current year
         public YearlyTaxData thisYear;
 
-        public void fromVariableMap(Dictionary<string, object> input)
+        public static TaxInformation fromVariableMap(Dictionary<string, object> input)
         {
-            if (this.lastYear == null)
+            TaxInformation t = new TaxInformation();
+            if (t.lastYear == null)
             {
-                this.lastYear = new YearlyTaxData();
+                t.lastYear = new YearlyTaxData();
             }
 
-            if (this.thisYear == null)
+            if (t.thisYear == null)
             {
-                this.thisYear = new YearlyTaxData();
+                t.thisYear = new YearlyTaxData();
             }
 
-            this.lastYear.income = Convert.ToDecimal(input["vj_einkommen"]);
-            this.lastYear.capital = Convert.ToDecimal(input["vj_vermoegen"]);
-            this.lastYear.taxdue = Convert.ToDecimal(input["vj_steuersatz"]);
-            this.thisYear.income = Convert.ToDecimal(input["vj_einkommen"]);
-            this.thisYear.capital = Convert.ToDecimal(input["vj_vermoegen"]);
-            this.thisYear.taxdue = Convert.ToDecimal(input["vj_steuersatz"]);
+            t.lastYear.income = Convert.ToDecimal(input["vj_einkommen"]);
+            t.lastYear.capital = Convert.ToDecimal(input["vj_vermoegen"]);
+            t.lastYear.taxdue = Convert.ToDecimal(input["vj_steuersatz"]);
+            t.thisYear.income = Convert.ToDecimal(input["vj_einkommen"]);
+            t.thisYear.capital = Convert.ToDecimal(input["vj_vermoegen"]);
+            t.thisYear.taxdue = Convert.ToDecimal(input["vj_steuersatz"]);
 
-            this.lastYear.inferred = Convert.ToBoolean(input["vj_inferiert"]);
-            this.lastYear.flagged = Convert.ToBoolean(input["vj_warnung"]);
-            this.thisYear.inferred = Convert.ToBoolean(input["lj_inferiert"]);
-            this.thisYear.flagged = Convert.ToBoolean(input["lj_warnung"]);
+            t.lastYear.inferred = Convert.ToBoolean(input["vj_inferiert"]);
+            t.lastYear.flagged = Convert.ToBoolean(input["vj_warnung"]);
+            t.thisYear.inferred = Convert.ToBoolean(input["lj_inferiert"]);
+            t.thisYear.flagged = Convert.ToBoolean(input["lj_warnung"]);
+
+            return t;
         }
 
         public Dictionary<string, object> toVariableMap()

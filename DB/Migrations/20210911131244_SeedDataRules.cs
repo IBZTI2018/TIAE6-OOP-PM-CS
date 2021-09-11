@@ -14,10 +14,10 @@ namespace DB.Migrations
               columns: new[] { "id", "parentId", "Discriminator", "rule", "createdAt", "modifiedAt", "condition", "transformation" },
               values: new object[,]
               {
-                  { 1, null, "InferenceRule", "Inferenz-Root", this.fakeDate, this.fakeDate, "true", "" },
+                  { 1, null, "InferenceRule", "Inferenz-Root", this.fakeDate, this.fakeDate, "true", "lj_inferred = true" },
                   { 2, 1, "InferenceRule", "Inferenz-Vermoegen", this.fakeDate, this.fakeDate, "lj_vermoegen == null || lj_vermoegen == 0", "lj_vermoegen = lj_einkommen * 0.75" },
 
-                  { 3, null, "EvaluationRule", "Evaluation-Root", this.fakeDate, this.fakeDate, "true", "" },
+                  { 3, null, "EvaluationRule", "Evaluation-Root", this.fakeDate, this.fakeDate, "true", "lj_calculated = true" },
                   { 4, 3, "EvaluationRule", "Fall 4", this.fakeDate, this.fakeDate, "vj_einkommen > (1.5* lj_einkommen) && vj_einkommen > 100000", "lj_flagged = true" },
                   { 5, 3, "EvaluationRule", "Knoten", this.fakeDate, this.fakeDate, "true", "" },
                   { 6, 5, "EvaluationRule", "VM/EK < 1", this.fakeDate, this.fakeDate, "(lj_vermoegen / lj_einkommen) < 1", "" },

@@ -16,21 +16,47 @@ using Shared.TreeTraversal;
 
 namespace Inferenzmotor {
   class Inferenzmotor {
+    public static Inferenzmotor shared = new Inferenzmotor();
+
     private List<Rule> rules;
 
     // Worker function to be started in a worker thread
     public static async void worker()
     {
-      using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
+      // Load all rules on startup
+      await Inferenzmotor.shared.loadRulesFromDatabase();
+
+      while (true)
       {
-        ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
-        // GET
-        TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
+        // Attempt to load a dataset from the database
+        Console.WriteLine("Fetching new data from database...");
+        TaxInformation newInformation;
+        using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
+        {
+          ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
+          TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
+          newInformation = response.taxInformation;
+        }
+
+        // If no new information is found, we just wait a bit and try again
+        if (newInformation == null || (newInformation.lastYear == null && newInformation.thisYear == null))
+        {
+          Console.WriteLine("No new data found, waiting and retrying...");
+          Thread.Sleep(10000);
+          continue;
+        }
+
+        // Otherwise, we process the data
+        Console.WriteLine("Found new information, inferring...");
+        YearlyTaxData inferredInformation = Inferenzmotor.shared.inferDataset(newInformation);
+        newInformation.thisYear = inferredInformation;
+        newInformation.thisYear.inferred = true;
+        await Inferenzmotor.shared.putInferredTaxInformation(newInformation);
       }
     }
 
     // Load all currently active rules from the database
-    public async void loadRulesFromDatabase()
+    public async Task loadRulesFromDatabase()
     {
       Console.WriteLine("Loading rules from database...");
       using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
@@ -50,7 +76,7 @@ namespace Inferenzmotor {
       return TaxInformation.fromVariableMap(result.data).thisYear;
     }
 
-    public async void putInferredTaxInformation(TaxInformation input)
+    public async Task putInferredTaxInformation(TaxInformation input)
     {
       Console.WriteLine("Storing inferred tax information in database...");
       using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))

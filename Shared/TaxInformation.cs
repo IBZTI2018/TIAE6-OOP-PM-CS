@@ -92,25 +92,28 @@ namespace Shared.Structures
 
         public Dictionary<string, object> toVariableMap()
         {
+            // Use defaults when this is the first tax data from a user
+            if (this.lastYear == null) this.lastYear = new YearlyTaxData();
+
             return new Dictionary<string, object>() {
                 {
                   "vj_einkommen",
-                  this.lastYear.taxable
+                  Convert.ToDouble(this.lastYear.taxable)
                 }, {
                   "vj_vermoegen",
-                  this.lastYear.capital
+                  Convert.ToDouble(this.lastYear.capital)
                 }, {
                   "vj_steuersatz",
-                  this.lastYear.taxdue
+                  Convert.ToDouble(this.lastYear.taxdue)
                 }, {
                   "lj_einkommen",
-                  this.thisYear.taxable
+                  Convert.ToDouble(this.thisYear.taxable)
                 }, {
                   "lj_vermoegen",
-                  this.thisYear.capital
+                  Convert.ToDouble(this.thisYear.capital)
                 }, {
                   "lj_steuersatz",
-                  this.thisYear.taxdue
+                  Convert.ToDouble(this.thisYear.taxdue)
                 },
 
                 {

@@ -69,7 +69,7 @@ namespace Shared.TreeTraversal {
         // If no root node is found, we just return the data as-is
         if (rootNode == null)
         {
-          Console.WriteLine("No root rule found, returning input as-is");
+          Console.WriteLine("  -> No root rule found, returning input as-is");
           return data;
         }
 
@@ -78,7 +78,7 @@ namespace Shared.TreeTraversal {
         currentNode = rootNode;
         do
         {
-          Console.WriteLine("Traversing through node " + currentNode.rule);
+          Console.WriteLine("  -> Traversing through node " + currentNode.rule);
 
           // Get all children for the current rule node
           children = rules.FindAll((rule) => rule.parent != null && rule.parent.id == currentNode.id);
@@ -95,7 +95,7 @@ namespace Shared.TreeTraversal {
           }
         } while (children.Count > 0);
 
-        Console.WriteLine("Reached leaf node on tree, returning final data");
+        Console.WriteLine("  -> Reached leaf node on tree, returning final data");
         return data;
       }
     }

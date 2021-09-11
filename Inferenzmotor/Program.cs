@@ -18,12 +18,20 @@ namespace Inferenzmotor {
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
             AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
 
+            /**Example GRPC Client Call START**/
             using (var http = GrpcChannel.ForAddress("http://localhost:" + Shared.Ports.DB_PORT))
             {
                 ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
-                TaxInformationListResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest { empty = 1 });
-                Console.WriteLine("Got list yeah count(): " + response.taxInformationList.Count);
+                // GET
+                TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest { empty = 1 });
+
+                // PUT
+                //response.taxInformation.thisYear.income = 999999;
+                //response.taxInformation.thisYear.inferred = false;
+                //BoolResponse putResponse = await taxInformationService.putTaxData(new YearlyTaxDataRequest { taxData = response.taxInformation.thisYear });
+
             }
+            /**Example GRPC Client Call END**/
 
             try
             {

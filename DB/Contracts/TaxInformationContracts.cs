@@ -22,6 +22,8 @@ namespace DB.Contracts
 
             foreach (var entry in entries)
             {
+                taxData.id = entry.taxDeclarationId;
+
                 if (entry.attribute == allAttributes.First(x => x.name == "Income"))
                 {
                     taxData.income = entry.value;
@@ -66,61 +68,113 @@ namespace DB.Contracts
             return info;
         }
 
-        List<TaxInformation> buildTaxInformationList()
+        TaxInformationResponse buildTaxInformationResponse(bool checkInferred = false, bool checkCalculated = false)
         {
-            IQueryable<TaxDeclaration> declarations;
+            TaxDeclaration thisYearDeclaration;
             using (var ctx = new TIAE6Context())
             {
-                declarations = ctx.taxDeclarations
-                    .Include(x => x.person)
-                    .Where(x => x.isApproved == false || x.isSent == false);
+                thisYearDeclaration = ctx.taxDeclarations
+                    .Include("Entries")
+                    .FirstOrDefault(x => x.isApproved == false || x.isSent == false);
             }
 
-            var work = new List<TaxInformation>();
+            TaxInformation returnObj = new TaxInformation();
 
-            foreach (var declaration in declarations)
+            if (thisYearDeclaration != null)
             {
                 TaxDeclaration lastDeclaration;
                 using (var ctx = new TIAE6Context())
                 {
-                    lastDeclaration = ctx.taxDeclarations.First(x => x.year == declaration.year - 1);
+                    lastDeclaration = ctx.taxDeclarations.Include("Entries").FirstOrDefault(x => x.year == thisYearDeclaration.year - 1);
                 }
-                work.Add(buildTaxInformation(declaration, lastDeclaration));
+
+                var newTaxInformation = buildTaxInformation(thisYearDeclaration, lastDeclaration);
+
+                bool addWork = true;
+
+                if (checkInferred)
+                {
+                    if (newTaxInformation.thisYear.inferred == true)
+                    {
+                        addWork = false;
+                    }
+                }
+
+                if (checkCalculated)
+                {
+                    if (newTaxInformation.thisYear.calculated == true)
+                    {
+                        addWork = false;
+                    }
+                }
+
+                if (addWork)
+                {
+                    returnObj = newTaxInformation;
+                }
             }
 
-            return work;
+            return new TaxInformationResponse { taxInformation = returnObj };
         }
 
-        public ValueTask<TaxInformationListResponse> getNonCalculatedWork(EmptyRequest request)
+        public ValueTask<TaxInformationResponse> getNonCalculatedWork(EmptyRequest request)
         {
-            var work = buildTaxInformationList();
-            var response = new TaxInformationListResponse();
-            foreach (var task in work)
+            return new ValueTask<TaxInformationResponse>(buildTaxInformationResponse(checkCalculated: true));
+        }
+
+        public ValueTask<TaxInformationResponse> getNonInferredWork(EmptyRequest request)
+        {
+            return new ValueTask<TaxInformationResponse>(buildTaxInformationResponse(checkInferred: true));
+        }
+
+        public ValueTask<BoolResponse> putTaxData(YearlyTaxDataRequest request)
+        {
+            TaxDeclaration declaration;
+            List<TaxDeclarationAttribute> allAttributes;
+            YearlyTaxData taxData = request.taxData;
+            using (var ctx = new TIAE6Context())
             {
-                response.taxInformationList.Add(task);
+                declaration = ctx.taxDeclarations.Include("Entries").FirstOrDefault(x => x.id == request.taxData.id);
+                allAttributes = ctx.taxDeclarationAttributes.ToList();
+
+                foreach (var entry in declaration.Entries)
+                {
+                    if (entry.attribute == allAttributes.First(x => x.name == "Income"))
+                    {
+                        entry.value = taxData.income;
+                    }
+
+                    if (entry.attribute == allAttributes.First(x => x.name == "Deductions"))
+                    {
+                        entry.value = taxData.deductions;
+                    }
+
+                    if (entry.attribute == allAttributes.First(x => x.name == "TaxDue"))
+                    {
+                        entry.value = taxData.taxdue;
+                    }
+
+                    if (entry.attribute == allAttributes.First(x => x.name == "Inferred"))
+                    {
+                        entry.value = taxData.inferred ? 1 : 0;
+                    }
+
+                    if (entry.attribute == allAttributes.First(x => x.name == "Calculated"))
+                    {
+                        entry.value = taxData.calculated ? 1 : 0;
+                    }
+
+                    if (entry.attribute == allAttributes.First(x => x.name == "Suspicious"))
+                    {
+                        entry.value = taxData.flagged ? 1 : 0;
+                    }
+                }
+
+                declaration.isSent = true;
+                ctx.SaveChanges();
             }
-            return new ValueTask<TaxInformationListResponse>(response);
-        }
 
-        public ValueTask<TaxInformationListResponse> getNonInferredWork(EmptyRequest request)
-        {
-            var work = buildTaxInformationList();
-            var response = new TaxInformationListResponse();
-            foreach (var task in work)
-            {
-                response.taxInformationList.Add(task);
-            }
-            return new ValueTask<TaxInformationListResponse>(response);
-        }
-
-        public ValueTask<BoolResponse> putCalculatedTaxData(YearlyTaxData request)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ValueTask<BoolResponse> putInferredTaxData(YearlyTaxData request)
-        {
-            throw new NotImplementedException();
+            return new ValueTask<BoolResponse>(new BoolResponse { success = true });
         }
     }
 }

@@ -13,13 +13,7 @@ namespace Shared.Contracts
         public TaxInformation taxInformation { get; set; }
     }
 
-    [DataContract]
-    public class TaxInformationListResponse
-    {
-        [DataMember(Order = 1)]
-        public List<TaxInformation> taxInformationList { get; set; }
-    }
-
+   
     [DataContract]
     public class YearlyTaxDataRequest
     {
@@ -30,9 +24,8 @@ namespace Shared.Contracts
     [ServiceContract]
     public interface ITaxInformationService
     {
-        public ValueTask<TaxInformationListResponse> getNonInferredWork(EmptyRequest request);
-        public ValueTask<TaxInformationListResponse> getNonCalculatedWork(EmptyRequest request);
-        public ValueTask<BoolResponse> putInferredTaxData(YearlyTaxData request);
-        public ValueTask<BoolResponse> putCalculatedTaxData(YearlyTaxData request);
+        public ValueTask<TaxInformationResponse> getNonInferredWork(EmptyRequest request);
+        public ValueTask<TaxInformationResponse> getNonCalculatedWork(EmptyRequest request);
+        public ValueTask<BoolResponse> putTaxData(YearlyTaxDataRequest request);
     }
 }

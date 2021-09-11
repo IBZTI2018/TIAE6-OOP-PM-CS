@@ -15,6 +15,9 @@ namespace Inferenzmotor {
         public static int INFERENCE_MOTOR_PORT = 9002;
         static async Task Main(string[] args)
         {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
+
             using (var http = GrpcChannel.ForAddress("http://localhost:" + Shared.Ports.DB_PORT))
             {
                 ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();

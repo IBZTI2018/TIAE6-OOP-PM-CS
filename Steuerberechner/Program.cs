@@ -12,6 +12,9 @@ namespace Steuerberechner
         public static int TAX_CALCULATOR_PORT = 9003;
         static void Main(string[] args)
         {
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            AppContext.SetSwitch("System.Net.Http.SocketsHttpHandler.Http2Support", true);
+
             try
             {
                 CreateHostBuilder(args).Build().Run();

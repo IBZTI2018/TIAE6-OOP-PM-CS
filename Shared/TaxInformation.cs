@@ -22,7 +22,6 @@ namespace Shared.Structures
         // Amount of capital the person entered
         public decimal capital = 0;
 
-        [ProtoMember(5)]
         // Amount of raw, taxable income
         public decimal taxable
         {
@@ -32,19 +31,19 @@ namespace Shared.Structures
             }
         }
 
-        [ProtoMember(6)]
+        [ProtoMember(5)]
         // Amount of tax due after calculation
         public decimal taxdue = 0;
 
-        [ProtoMember(7)]
+        [ProtoMember(6)]
         // Whether or not data has been approved by inference system
         public bool inferred = false;
 
-        [ProtoMember(8)]
+        [ProtoMember(7)]
         // Wether or not data has been calculated by tax calculator
         public bool calculated = false;
 
-        [ProtoMember(9)]
+        [ProtoMember(8)]
         // Whether or not data has been flagged as suspicious
         public bool flagged = false;
     }

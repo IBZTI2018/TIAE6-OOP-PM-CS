@@ -23,7 +23,7 @@ namespace DB
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)
           .ConfigureKestrel(options => {
-              options.ListenLocalhost(Shared.Ports.DB_PORT, listenOptions => {
+              options.ListenLocalhost(Shared.Network.DB_PORT, listenOptions => {
                   listenOptions.Protocols = HttpProtocols.Http2;
               });
           })

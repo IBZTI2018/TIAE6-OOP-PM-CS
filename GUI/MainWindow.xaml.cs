@@ -18,9 +18,9 @@ namespace GUI
         public void checkSystemStatus()
         {
             var services = new List<(dynamic circle, int port)> { 
-                (dbStatusCircle, Shared.Ports.DB_PORT), 
-                (inferenceStatusCircle, Shared.Ports.INFERENCE_PORT), 
-                (taxStatusCircle, Shared.Ports.TAX_PORT) 
+                (dbStatusCircle, Shared.Network.DB_PORT), 
+                (inferenceStatusCircle, Shared.Network.INFERENCE_PORT), 
+                (taxStatusCircle, Shared.Network.TAX_PORT) 
             };
             foreach (var service in services) {
                 service.circle.Fill = new SolidColorBrush(Colors.Gray);
@@ -63,7 +63,7 @@ namespace GUI
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
-            using (var http = GrpcChannel.ForAddress("http://localhost:" + Shared.Ports.DB_PORT))
+            using (var http = GrpcChannel.ForAddress("http://localhost:" + Shared.Network.DB_PORT))
             {
                 IPersonService personService = http.CreateGrpcService<IPersonService>();
                 PersonResponse response = await personService.getPerson(new IDRequest { id = Int32.Parse(personId.Text) });

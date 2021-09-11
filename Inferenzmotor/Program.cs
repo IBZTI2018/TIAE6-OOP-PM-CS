@@ -21,7 +21,7 @@ namespace Inferenzmotor {
     // Worker function to be started in a worker thread
     public static async void worker()
     {
-      using (var http = GrpcChannel.ForAddress(Shared.Ports.BASE_HOST + Shared.Ports.DB_PORT))
+      using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
       {
         ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
         // GET
@@ -33,7 +33,7 @@ namespace Inferenzmotor {
     public async void loadRulesFromDatabase()
     {
       Console.WriteLine("Loading rules from database...");
-      using (var http = GrpcChannel.ForAddress(Shared.Ports.BASE_HOST + Shared.Ports.DB_PORT))
+      using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
       {
         IRuleService ruleService = http.CreateGrpcService<IRuleService>();
         InferenceRulesResponse ruleList = await ruleService.getInferenceRules(new EmptyRequest());
@@ -53,7 +53,7 @@ namespace Inferenzmotor {
     public async void putInferredTaxInformation(TaxInformation input)
     {
       Console.WriteLine("Storing inferred tax information in database...");
-      using (var http = GrpcChannel.ForAddress(Shared.Ports.BASE_HOST + Shared.Ports.DB_PORT))
+      using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
       {
         ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
         BoolResponse putResponse = await taxInformationService.putTaxData(new YearlyTaxDataRequest { taxData = input.thisYear });
@@ -91,7 +91,7 @@ namespace Inferenzmotor {
         public static IWebHostBuilder CreateHostBuilder(string[] args) =>
           WebHost.CreateDefaultBuilder(args)
           .ConfigureKestrel(options => {
-              options.ListenLocalhost(Shared.Ports.INFERENCE_PORT, listenOptions => {
+              options.ListenLocalhost(Shared.Network.INFERENCE_PORT, listenOptions => {
                   listenOptions.Protocols = HttpProtocols.Http2;
               });
           })

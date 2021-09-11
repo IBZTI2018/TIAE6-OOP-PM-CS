@@ -1,6 +1,6 @@
 ﻿namespace Shared
 {
-    class Ports
+    class Network
     {
         public static string BASE_HOST = "http://localhost:";
 

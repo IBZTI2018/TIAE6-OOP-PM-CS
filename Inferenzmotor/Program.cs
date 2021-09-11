@@ -23,12 +23,16 @@ namespace Inferenzmotor {
             {
                 ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
                 // GET
-                TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest { empty = 1 });
+                TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
 
                 // PUT
                 //response.taxInformation.thisYear.income = 999999;
                 //response.taxInformation.thisYear.inferred = false;
                 //BoolResponse putResponse = await taxInformationService.putTaxData(new YearlyTaxDataRequest { taxData = response.taxInformation.thisYear });
+
+                IRuleService ruleService = http.CreateGrpcService<IRuleService>();
+                InferenceRulesResponse ruleList = await ruleService.getInferenceRules(new EmptyRequest());
+                Console.WriteLine("Count Inference Rules: " + ruleList.rules.Count.ToString());
 
             }
             /**Example GRPC Client Call END**/

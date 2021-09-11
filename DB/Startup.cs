@@ -29,6 +29,7 @@ namespace DB
                 endpoints.MapGrpcService<PersonService>();
                 endpoints.MapGrpcService<StatusService>();
                 endpoints.MapGrpcService<TaxInformationService>();
+                endpoints.MapGrpcService<RuleService>();
             });
         }
     }

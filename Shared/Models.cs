@@ -83,8 +83,8 @@ namespace Shared.Models
     }
 
     [ProtoContract]
-    [ProtoInclude(10, typeof(InferenceRule))]
-    [ProtoInclude(20, typeof(EvaluationRule))]
+    [ProtoInclude(100, typeof(InferenceRule))]
+    [ProtoInclude(200, typeof(EvaluationRule))]
     public abstract class Rule : BaseModel
     {
         [Required]

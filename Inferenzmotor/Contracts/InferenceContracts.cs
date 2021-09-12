@@ -10,5 +10,11 @@ namespace Inferenzmotor.Contracts
         {
             return new ValueTask<InferenceResponse>(new InferenceResponse { value = 1 });
         }
+
+        public async ValueTask<BoolResponse> reloadRules(EmptyRequest request)
+        {
+            await Inferenzmotor.shared.loadRulesFromDatabase();
+            return new BoolResponse { success = true };  
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Shared.Contracts
     public interface ITaxCalculatorService
     {
         public ValueTask<TaxCalculatorResponse> getTaxes(IDRequest request);
+        public ValueTask<BoolResponse> reloadRules(EmptyRequest request);
     }
 }

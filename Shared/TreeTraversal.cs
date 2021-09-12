@@ -88,14 +88,26 @@ namespace Shared.TreeTraversal {
             // Check if condition is true. If not, continue.
             if (child.condition == null) child.condition = "true";
             if (RuleParser.evaluateAsCondition(child.condition, data)) {
-              data = RuleParser.evaluateAsTransformation(child.transformation, data);
+              if (child.transformation != null && child.transformation != "")
+              {
+                data = RuleParser.evaluateAsTransformation(child.transformation, data);
+              } 
+
               currentNode = child;
               break;
             }
           }
+
+          // If no condition matched, we also stop. 
+          // TODO: Talk with customer what to do in this case!
+          if (children.Count > 0)
+          {
+            Console.WriteLine("  -> Had " + children.Count + " children but none matched. Returnung data.");
+            return data;
+          }
         } while (children.Count > 0);
 
-        Console.WriteLine("  -> Reached leaf node on tree, returning final data");
+        Console.WriteLine("  -> Reached leaf node on tree. Returning final data.");
         return data;
       }
     }

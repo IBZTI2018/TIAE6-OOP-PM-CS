@@ -6,55 +6,55 @@
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
         Title="Kantonale Steuerverwaltungs-Software" Height="500" Width="1000">
-  <Grid Margin="0,0,-138,-138">
-    <Grid.ColumnDefinitions>
-      <ColumnDefinition Width="43*"/>
-      <ColumnDefinition Width="434*"/>
-      <ColumnDefinition Width="323*"/>
-    </Grid.ColumnDefinitions>
-    <GroupBox Header="System-Status" Grid.ColumnSpan="2" Margin="10,10,0,0" HorizontalAlignment="Left" Width="197" Height="173" VerticalAlignment="Top">
-      <Canvas Margin="0,0,115,0" Height="239">
-        <Ellipse
+    <Grid Margin="0,0,-138,-138">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="43*"/>
+            <ColumnDefinition Width="434*"/>
+            <ColumnDefinition Width="323*"/>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="System-Status" Grid.ColumnSpan="2" Margin="10,10,0,0" HorizontalAlignment="Left" Width="197" Height="173" VerticalAlignment="Top">
+            <Canvas Margin="0,0,115,0" Height="239">
+                <Ellipse
                   x:Name="dbStatusCircle"
                   Canvas.Top="10"
                   Fill="Gray"
                   Height="25"
                   Width="25" Margin="10,0,295,0" Canvas.Left="-3"/>
-        <Label Content="Datenbank" Canvas.Left="41" Canvas.Top="10" HorizontalAlignment="Left"/>
-        <Ellipse
+                <Label Content="Datenbank" Canvas.Left="41" Canvas.Top="10" HorizontalAlignment="Left"/>
+                <Ellipse
                     x:Name="inferenceStatusCircle"
                     Canvas.Top="47"
                     Fill="Gray"
                     Height="25"
                     Width="25" Canvas.Left="7"/>
-        <Label Content="Inferenzmotor" Canvas.Left="41" Canvas.Top="47"/>
-        <Ellipse
+                <Label Content="Inferenzmotor" Canvas.Left="41" Canvas.Top="47"/>
+                <Ellipse
                     x:Name="taxStatusCircle"
                     Canvas.Top="85"
                     Fill="Gray"
                     Height="25"
                     Width="25" Canvas.Left="7"/>
-        <Label Content="Steuerberechner" Canvas.Left="41" Canvas.Top="84"/>
-      </Canvas>
-    </GroupBox>
-    <Button Content="Status reloaden" HorizontalAlignment="Left" Margin="24,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_1"/>
-    <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="769" Grid.ColumnSpan="2">
-      <TabItem Header="Natürliche Personen">
-        <ListView x:Name="personListView">
-          <ListView.View>
-            <GridView>
-              <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
-              <GridViewColumn Header="Vorname" Width="100" DisplayMemberBinding="{Binding firstName}" />
-              <GridViewColumn Header="Nachname" Width="100" DisplayMemberBinding="{Binding lastName}" />
-              <GridViewColumn Header="Strasse" Width="100" DisplayMemberBinding="{Binding street.name}" />
-              <GridViewColumn Header="Nr." Width="100" DisplayMemberBinding="{Binding streetNumber}" />
-              <GridViewColumn Header="PLZ" Width="100" DisplayMemberBinding="{Binding street.postalCode}" />
-              <GridViewColumn Header="Gemeinde" Width="100" DisplayMemberBinding="{Binding street.municipality.name}" />
-            </GridView>
-          </ListView.View>
-          <ListView.ContextMenu>
-            <ContextMenu>
-              <MenuItem Header="Steuererklärung einreichen"
+                <Label Content="Steuerberechner" Canvas.Left="41" Canvas.Top="84"/>
+            </Canvas>
+        </GroupBox>
+        <Button Content="Status reloaden" HorizontalAlignment="Left" Margin="24,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_1"/>
+        <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="769" Grid.ColumnSpan="2">
+            <TabItem Header="Natürliche Personen">
+                <ListView x:Name="personListView">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
+                            <GridViewColumn Header="Vorname" Width="100" DisplayMemberBinding="{Binding firstName}" />
+                            <GridViewColumn Header="Nachname" Width="100" DisplayMemberBinding="{Binding lastName}" />
+                            <GridViewColumn Header="Strasse" Width="100" DisplayMemberBinding="{Binding street.name}" />
+                            <GridViewColumn Header="Nr." Width="100" DisplayMemberBinding="{Binding streetNumber}" />
+                            <GridViewColumn Header="PLZ" Width="100" DisplayMemberBinding="{Binding street.postalCode}" />
+                            <GridViewColumn Header="Gemeinde" Width="100" DisplayMemberBinding="{Binding street.municipality.name}" />
+                        </GridView>
+                    </ListView.View>
+                    <ListView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Steuererklärung einreichen"
                                 Command="{Binding InsertTaxDeclaration}"
                                 CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
                         </ContextMenu>
@@ -79,10 +79,11 @@
             <TabItem Header="Steuerberechnerregeln">
             </TabItem>
         </TabControl>
-      <GroupBox Header="System-Aktionen" Grid.ColumnSpan="2" Margin="10,188,0,0" HorizontalAlignment="Left" Width="197" Height="104" VerticalAlignment="Top"/>
-        <Button Content="Inferenzregeln reloaden" HorizontalAlignment="Left" Margin="24,219,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_2"/>
-        <Button Content="Rechnungsregeln reloaden" HorizontalAlignment="Left" Margin="24,255,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_3"/>$
-      </GroupBox>
-
-  </Grid>
+        <GroupBox Header="System-Aktionen" Grid.ColumnSpan="2" Margin="10,197,0,0" HorizontalAlignment="Left" Width="197" Height="114" VerticalAlignment="Top">
+            <Canvas>
+                <Button Content="Inferenzregeln reloaden" Margin="0,229,492,0" Grid.ColumnSpan="2" Width="157" Click="Button_Click_2" Canvas.Left="15" Canvas.Top="-211"/>
+                <Button Content="Rechnungsregeln reloaden" Margin="0,264,491,0" Grid.ColumnSpan="2" Width="157" Click="Button_Click_3" Canvas.Left="15" Canvas.Top="-211"/>
+            </Canvas>
+        </GroupBox>
+    </Grid>
 </Window>

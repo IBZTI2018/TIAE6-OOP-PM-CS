@@ -13,8 +13,8 @@ namespace DB.Contracts
             {
                 TaxDeclarationListResponse response = new TaxDeclarationListResponse { 
                     declarationList = ctx.taxDeclarations
-                                         .Include("Entries")
-                                         .Include("Entries.Attributes")
+                                         .Include(x => x.Entries)
+                                         .ThenInclude(x => x.attribute)
                                          .ToList() 
                 };
                 return new ValueTask<TaxDeclarationListResponse>(response);

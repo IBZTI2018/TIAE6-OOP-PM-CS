@@ -129,6 +129,7 @@ namespace Shared.Models
         [ProtoMember(5)]
         public bool isSent { get; set; }
 
+        [InverseProperty("taxDeclaration")]
         public virtual ICollection<TaxDeclarationEntry> Entries { get; set; }
     }
 
@@ -143,9 +144,6 @@ namespace Shared.Models
     [ProtoContract]
     public class TaxDeclarationEntry : BaseModel
     {
-        public TaxDeclarationEntry() {
-            Attributes = new HashSet<TaxDeclarationAttribute>();
-        }
 
         [ProtoMember(1)]
         public int taxDeclarationId { get; set; }
@@ -167,7 +165,5 @@ namespace Shared.Models
         [ForeignKey("createdByRuleId")]
         [ProtoMember(7)]
         public Rule createdByRule { get; set; }
-
-        public virtual ICollection<TaxDeclarationAttribute> Attributes { get; set; }
-}
+    }
 }

@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.Linq;
+﻿
 using Shared.Contracts;
 using Shared.Structures;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Shared.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DB.Contracts
 {
@@ -14,11 +14,6 @@ namespace DB.Contracts
         YearlyTaxData buildTaxData(ICollection<TaxDeclarationEntry> entries)
         {
             YearlyTaxData taxData = new YearlyTaxData();
-            List<TaxDeclarationAttribute> allAttributes;
-            using (var ctx = new TIAE6Context())
-            {
-                allAttributes = ctx.taxDeclarationAttributes.ToList();
-            }
 
             foreach (var entry in entries)
             {
@@ -131,41 +126,42 @@ namespace DB.Contracts
         public ValueTask<BoolResponse> putTaxData(YearlyTaxDataRequest request)
         {
             TaxDeclaration declaration;
-            List<TaxDeclarationAttribute> allAttributes;
             YearlyTaxData taxData = request.taxData;
             using (var ctx = new TIAE6Context())
             {
-                declaration = ctx.taxDeclarations.Include("Entries").FirstOrDefault(x => x.id == request.taxData.id);
-                allAttributes = ctx.taxDeclarationAttributes.ToList();
+                declaration = ctx.taxDeclarations
+                                 .Include("Entries")
+                                 .Include("Entries.attribute")
+                                 .FirstOrDefault(x => x.id == request.taxData.id);
 
                 foreach (var entry in declaration.Entries)
                 {
-                    if (entry.attribute == allAttributes.First(x => x.name == "Income"))
+                    if (entry.attribute.name == "Income")
                     {
                         entry.value = taxData.income;
                     }
 
-                    if (entry.attribute == allAttributes.First(x => x.name == "Deductions"))
+                    if (entry.attribute.name == "Deductions")
                     {
                         entry.value = taxData.deductions;
                     }
 
-                    if (entry.attribute == allAttributes.First(x => x.name == "TaxDue"))
+                    if (entry.attribute.name == "TaxDue")
                     {
                         entry.value = taxData.taxdue;
                     }
 
-                    if (entry.attribute == allAttributes.First(x => x.name == "Inferred"))
+                    if (entry.attribute.name == "Inferred")
                     {
                         entry.value = taxData.inferred ? 1 : 0;
                     }
 
-                    if (entry.attribute == allAttributes.First(x => x.name == "Calculated"))
+                    if (entry.attribute.name == "Calculated")
                     {
                         entry.value = taxData.calculated ? 1 : 0;
                     }
 
-                    if (entry.attribute == allAttributes.First(x => x.name == "Suspicious"))
+                    if (entry.attribute.name == "Suspicious")
                     {
                         entry.value = taxData.flagged ? 1 : 0;
                     }

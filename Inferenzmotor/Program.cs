@@ -47,9 +47,10 @@ namespace Inferenzmotor {
         }
 
         // Otherwise, we process the data
-        Console.WriteLine("Found new information, inferring...");
+        Console.WriteLine("Found new information, inferring... (id:" + newInformation.thisYear.id + ")");
         TaxInformation inferredInformation = Inferenzmotor.shared.inferDataset(newInformation);
         await Inferenzmotor.shared.putInferredTaxInformation(inferredInformation);
+        Thread.Sleep(1000);
       }
     }
 
@@ -73,6 +74,8 @@ namespace Inferenzmotor {
       RuleData result = RuleTraversal.traverseRuleTree(this.rules, new RuleData(input.toVariableMap()));
       TaxInformation output = TaxInformation.fromVariableMap(result.data);
       output.thisYear.inferred = true;
+      output.thisYear.id = input.thisYear.id;
+      output.lastYear.id = input.lastYear.id;
       output.id = input.id;
       return output;
     }

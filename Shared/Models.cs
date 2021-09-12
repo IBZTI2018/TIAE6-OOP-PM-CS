@@ -56,6 +56,14 @@ namespace Shared.Models
         [Required]
         [ProtoMember(5)]
         public string streetNumber { get; set; }
+
+        public string fullName
+        {
+            get
+            {
+                return this.firstName + ' ' + this.lastName;
+            }
+        }
     }
 
     [ProtoContract]
@@ -131,6 +139,45 @@ namespace Shared.Models
 
         [InverseProperty("taxDeclaration")]
         public virtual ICollection<TaxDeclarationEntry> Entries { get; set; }
+
+        public bool isInferred
+        {
+            get
+            {
+                if (this.Entries.Count > 0)
+                {
+                    bool localIsInferred = false;
+                    foreach (var entry in this.Entries)
+                    {
+                        if (entry.attribute.name == "Inferred")
+                        {
+                            localIsInferred = true;
+                        }
+                    }
+                    return localIsInferred;
+                }
+                return false;
+            }
+        }
+        public bool isCalculated
+        {
+            get
+            {
+                if (this.Entries.Count > 0)
+                {
+                    bool localIsCalculated = false;
+                    foreach (var entry in this.Entries)
+                    {
+                        if (entry.attribute.name == "Calculated")
+                        {
+                            localIsCalculated = true;
+                        }
+                    }
+                    return localIsCalculated;
+                }
+                return false;
+            }
+        }
     }
 
     [ProtoContract]

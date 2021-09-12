@@ -13,6 +13,7 @@ namespace DB.Contracts
             {
                 TaxDeclarationListResponse response = new TaxDeclarationListResponse { 
                     declarationList = ctx.taxDeclarations
+                                         .Include(x => x.person)
                                          .Include(x => x.Entries)
                                          .ThenInclude(x => x.attribute)
                                          .ToList() 

@@ -167,7 +167,6 @@ namespace DB.Contracts
                     }
                 }
 
-                declaration.isSent = true;
                 ctx.SaveChanges();
             }
 

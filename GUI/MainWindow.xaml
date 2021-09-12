@@ -7,6 +7,10 @@
         mc:Ignorable="d"
         Title="Kantonale Steuerverwaltungs-Software" Height="500" Width="1000">
     <Grid Margin="0,0,-138,-138">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="405*"/>
+            <RowDefinition Height="217*"/>
+        </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="43*"/>
             <ColumnDefinition Width="434*"/>
@@ -38,7 +42,7 @@
             </Canvas>
         </GroupBox>
         <Button Content="Status reloaden" HorizontalAlignment="Left" Margin="24,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_1"/>
-        <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="769" Grid.ColumnSpan="2">
+        <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="769" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <TabItem Header="Natürliche Personen">
                 <ListView x:Name="personListView">
                     <ListView.View>
@@ -68,8 +72,8 @@
                             <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
                             <GridViewColumn Header="Person" Width="100" DisplayMemberBinding="{Binding person.fullName}" />
                             <GridViewColumn Header="Jahr" Width="100" DisplayMemberBinding="{Binding year}" />
-                            <GridViewColumn Header="Ist zugelassen?" Width="100" DisplayMemberBinding="{Binding isApproved}" />
-                            <GridViewColumn Header="Ist versendet?" Width="100" DisplayMemberBinding="{Binding isSent}" />
+                            <GridViewColumn Header="Über Inferenzmotor durchgelaufen?" Width="200" DisplayMemberBinding="{Binding isInferred}" />
+                            <GridViewColumn Header="Über Steuerberechner durchgelaufen?" Width="200" DisplayMemberBinding="{Binding isCalculated}" />
                         </GridView>
                     </ListView.View>
                 </ListView>

@@ -24,34 +24,34 @@ namespace DB.Contracts
             {
                 taxData.id = entry.taxDeclarationId;
 
-                if (entry.attribute == allAttributes.First(x => x.name == "Income"))
+                if (entry.attribute.name == "Income")
                 {
                     taxData.income = entry.value;
                 }
 
-                if (entry.attribute == allAttributes.First(x => x.name == "Deductions"))
+                if (entry.attribute.name == "Deductions")
                 {
-                    taxData.deductions = entry.value;
+                  taxData.deductions = entry.value;
                 }
 
-                if (entry.attribute == allAttributes.First(x => x.name == "TaxDue"))
+                if (entry.attribute.name == "TaxDue")
                 {
-                    taxData.taxdue = entry.value;
+                  taxData.taxdue = entry.value;
                 }
 
-                if (entry.attribute == allAttributes.First(x => x.name == "Inferred"))
+                if (entry.attribute.name == "Inferred")
                 {
-                    taxData.inferred = entry.value == 1;
+                  taxData.inferred = entry.value == 1;
                 }
 
-                if (entry.attribute == allAttributes.First(x => x.name == "Calculated"))
+                if (entry.attribute.name == "Calculated")
                 {
-                    taxData.calculated = entry.value == 1;
+                  taxData.calculated = entry.value == 1;
                 }
 
-                if (entry.attribute == allAttributes.First(x => x.name == "Suspicious"))
+                if (entry.attribute.name == "Suspicious")
                 {
-                    taxData.flagged = entry.value == 1;
+                  taxData.flagged = entry.value == 1;
                 }
             }
             return taxData;
@@ -75,6 +75,7 @@ namespace DB.Contracts
             {
                 thisYearDeclaration = ctx.taxDeclarations
                     .Include("Entries")
+                    .Include("Entries.attribute")
                     .FirstOrDefault(x => x.isApproved == false || x.isSent == false);
             }
 

@@ -16,21 +16,41 @@ using Shared.TreeTraversal;
 
 namespace Steuerberechner {
   class Steuerberechner {
+    public static Steuerberechner shared = new Steuerberechner();
+
     private List<Rule> rules;
 
     // Worker function to be started in a worker thread
     public static async void worker()
     {
-      Steuerberechner self = new Steuerberechner();
-
       // Load all rules on startup
-      await self.loadRulesFromDatabase();
+      await Steuerberechner.shared.loadRulesFromDatabase();
 
-      using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
+      while (true)
       {
-        ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
-        TaxInformationResponse response = await taxInformationService.getNonCalculatedWork(new EmptyRequest());
-        int x = 20;
+        // Attempt to load a dataset from the database
+        Console.WriteLine("Fetching new data from database...");
+        TaxInformation newInformation;
+        using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
+        {
+          ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
+          TaxInformationResponse response = await taxInformationService.getNonCalculatedWork(new EmptyRequest());
+          newInformation = response.taxInformation;
+        }
+
+        // If no new information is found, we just wait a bit and try again
+        if (newInformation == null || (newInformation.lastYear == null && newInformation.thisYear == null))
+        {
+          Console.WriteLine("No new data found, waiting and retrying...");
+          Thread.Sleep(10000);
+          continue;
+        }
+
+        // Otherwise, we process the data
+        Console.WriteLine("Found new information, evaluating... (id:" + newInformation.thisYear.id + ")");
+        TaxInformation evaluatedInformation = Steuerberechner.shared.evaluateDataset(newInformation);
+        await Steuerberechner.shared.putEvaluatedTaxInformation(evaluatedInformation);
+        Thread.Sleep(1000);
       }
     }
 
@@ -49,10 +69,15 @@ namespace Steuerberechner {
     }
 
     // Infer a dataset based on the stored rules
-    public YearlyTaxData evaluateDataset(TaxInformation input)
+    public TaxInformation evaluateDataset(TaxInformation input)
     {
       RuleData result = RuleTraversal.traverseRuleTree(this.rules, new RuleData(input.toVariableMap()));
-      return TaxInformation.fromVariableMap(result.data).thisYear;
+      TaxInformation output = TaxInformation.fromVariableMap(result.data);
+      output.thisYear.calculated = true;
+      output.thisYear.id = input.thisYear.id;
+      output.lastYear.id = input.lastYear.id;
+      output.id = input.id;
+      return output;
     }
 
     public async Task putEvaluatedTaxInformation(TaxInformation input)

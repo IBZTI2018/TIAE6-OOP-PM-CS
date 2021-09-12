@@ -9,5 +9,11 @@ namespace Steuerberechner.Contracts
         {
             return new ValueTask<TaxCalculatorResponse>(new TaxCalculatorResponse { value = 1 });
         }
+
+        public async ValueTask<BoolResponse> reloadRules(EmptyRequest request)
+        {
+            await Steuerberechner.shared.loadRulesFromDatabase();
+            return new BoolResponse { success = true };
+        }
     }
 }

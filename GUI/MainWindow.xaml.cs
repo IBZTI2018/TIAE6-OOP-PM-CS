@@ -117,5 +117,17 @@ namespace GUI
             loadPersons();
             loadTaxDeclarations();
         }
+
+        private async void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            IInferenceService service = this.InferenceChannel.CreateGrpcService<IInferenceService>();
+            BoolResponse response = await service.reloadRules(new EmptyRequest());
+        }
+
+        private async void Button_Click_3(object sender, RoutedEventArgs e)
+        {
+            ITaxCalculatorService service = this.TaxChannel.CreateGrpcService<ITaxCalculatorService>();
+            BoolResponse response = await service.reloadRules(new EmptyRequest());
+        }
     }
 }

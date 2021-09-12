@@ -14,5 +14,6 @@ namespace Shared.Contracts
     public interface IInferenceService
     {
         public ValueTask<InferenceResponse> getInference(IDRequest request);
+        public ValueTask<BoolResponse> reloadRules(EmptyRequest request);
     }
 }

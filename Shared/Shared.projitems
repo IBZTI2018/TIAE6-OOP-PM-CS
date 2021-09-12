@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\RuleContracts.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Contracts\TaxDeclarationContracts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\TaxInformationContracts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ExpressionEvaluator.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Contracts\BaseContracts.cs" />

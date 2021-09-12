@@ -62,7 +62,17 @@
                 </ListView>
             </TabItem>
             <TabItem Header="Steuererklärungen">
-                <Grid Background="#FFE5E5E5"/>
+                <ListView x:Name="taxDeclarationListView">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
+                            <GridViewColumn Header="Person" Width="100" DisplayMemberBinding="{Binding person.fullName}" />
+                            <GridViewColumn Header="Jahr" Width="100" DisplayMemberBinding="{Binding year}" />
+                            <GridViewColumn Header="Ist zugelassen?" Width="100" DisplayMemberBinding="{Binding isApproved}" />
+                            <GridViewColumn Header="Ist versendet?" Width="100" DisplayMemberBinding="{Binding isSent}" />
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </TabItem>
             <TabItem Header="Inferenzregeln">
             </TabItem>

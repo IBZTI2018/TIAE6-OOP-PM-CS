@@ -30,6 +30,7 @@ namespace DB
                 endpoints.MapGrpcService<StatusService>();
                 endpoints.MapGrpcService<TaxInformationService>();
                 endpoints.MapGrpcService<RuleService>();
+                endpoints.MapGrpcService<TaxDeclarationService>();
             });
         }
     }

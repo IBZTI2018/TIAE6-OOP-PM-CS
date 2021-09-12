@@ -143,6 +143,10 @@ namespace Shared.Models
     [ProtoContract]
     public class TaxDeclarationEntry : BaseModel
     {
+        public TaxDeclarationEntry() {
+            Attributes = new HashSet<TaxDeclarationAttribute>();
+        }
+
         [ProtoMember(1)]
         public int taxDeclarationId { get; set; }
         [ForeignKey("taxDeclarationId")]
@@ -163,5 +167,7 @@ namespace Shared.Models
         [ForeignKey("createdByRuleId")]
         [ProtoMember(7)]
         public Rule createdByRule { get; set; }
-    }
+
+        public virtual ICollection<TaxDeclarationAttribute> Attributes { get; set; }
+}
 }

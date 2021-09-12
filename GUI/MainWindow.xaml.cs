@@ -22,7 +22,7 @@ namespace GUI
         GrpcChannel InferenceChannel;
         GrpcChannel TaxChannel;
 
-        public void checkSystemStatus()
+        public async void checkSystemStatus()
         {
             var channels = new List<(dynamic circle, GrpcChannel channel)> { 
                 (dbStatusCircle, DBChannel), 
@@ -31,44 +31,64 @@ namespace GUI
             };
             foreach (var channel in channels) {
                 channel.circle.Fill = new SolidColorBrush(Colors.Gray);
-                Task.Run(async () =>
+                await Task.Delay(500);
+                try
                 {
-                    await Task.Delay(500);
-                    try
+                    IStatusService statusService = channel.channel.CreateGrpcService<IStatusService>();
+                    StatusResponse response = await statusService.getStatus(new StatusRequest { ping = 1 });
+                    if (response.pong != 1)
                     {
-                        IStatusService statusService = channel.channel.CreateGrpcService<IStatusService>();
-                        StatusResponse response = await statusService.getStatus(new StatusRequest { ping = 1 });
-                        if (response.pong != 1)
-                        {
-                            throw new Exception();
-                        }
+                        throw new Exception();
+                    }
 
-                        Dispatcher.Invoke(() => {
-                            // Update GUI inside async func
-                            channel.circle.Fill = new SolidColorBrush(Colors.LightGreen);
-                        });
-                    }
-                    catch (Exception e)
-                    {
-                        Dispatcher.Invoke(() => {
-                            // Update GUI inside async func
-                            channel.circle.Fill = new SolidColorBrush(Colors.Red);
-                        });
-                    }
-                });
+                    Dispatcher.Invoke(() => {
+                        // Update GUI inside async func
+                        channel.circle.Fill = new SolidColorBrush(Colors.LightGreen);
+                    });
+                }
+                catch (Exception e)
+                {
+                    Dispatcher.Invoke(() => {
+                        // Update GUI inside async func
+                        channel.circle.Fill = new SolidColorBrush(Colors.Red);
+                    });
+                }
             }
         }
 
         private async void loadPersons()
         {
-            IPersonService personService = DBChannel.CreateGrpcService<IPersonService>();
-            PersonListResponse response = await personService.getPersonAll(new EmptyRequest());
-            foreach (Person person in response.personList)
+            try
+            {
+                IPersonService personService = DBChannel.CreateGrpcService<IPersonService>();
+                PersonListResponse response = await personService.getPersonAll(new EmptyRequest());
+                this.personListView.Items.Clear();
+                foreach (Person person in response.personList)
+                {
+                    Dispatcher.Invoke(() => {
+                        this.personListView.Items.Add(person);
+                    });
+                }
+            }
+            catch
+            {
+
+            }
+            
+        }
+
+        private async void loadTaxDeclarations()
+        {
+            ITaxDeclarationService taxDeclarationService = DBChannel.CreateGrpcService<ITaxDeclarationService>();
+            TaxDeclarationListResponse response = await taxDeclarationService.getAllTaxDeclarations(new EmptyRequest());
+            this.taxDeclarationListView.Items.Clear();
+            foreach (TaxDeclaration declaration in response.declarationList)
             {
                 Dispatcher.Invoke(() => {
-                    this.personListView.Items.Add(person);
+                    this.taxDeclarationListView.Items.Add(declaration);
                 });
             }
+
         }
 
         public MainWindow()
@@ -81,6 +101,7 @@ namespace GUI
             InitializeComponent();
             checkSystemStatus();
             loadPersons();
+            loadTaxDeclarations();
         }
 
         protected virtual void Dispose()
@@ -93,6 +114,8 @@ namespace GUI
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             checkSystemStatus();
+            loadPersons();
+            loadTaxDeclarations();
         }
     }
 }

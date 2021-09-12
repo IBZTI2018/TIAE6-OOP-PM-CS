@@ -114,8 +114,11 @@ namespace GUI
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             checkSystemStatus();
+<<<<<<< HEAD
             loadPersons();
             loadTaxDeclarations();
+        }
+=======
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
@@ -129,5 +132,6 @@ namespace GUI
             ITaxCalculatorService service = this.TaxChannel.CreateGrpcService<ITaxCalculatorService>();
             BoolResponse response = await service.reloadRules(new EmptyRequest());
         }
+>>>>>>> f29dd102908786a7e9a75c356ac6c651597fd995
     }
 }

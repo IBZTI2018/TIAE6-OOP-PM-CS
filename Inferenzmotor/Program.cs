@@ -48,10 +48,8 @@ namespace Inferenzmotor {
 
         // Otherwise, we process the data
         Console.WriteLine("Found new information, inferring...");
-        YearlyTaxData inferredInformation = Inferenzmotor.shared.inferDataset(newInformation);
-        newInformation.thisYear = inferredInformation;
-        newInformation.thisYear.inferred = true;
-        await Inferenzmotor.shared.putInferredTaxInformation(newInformation);
+        TaxInformation inferredInformation = Inferenzmotor.shared.inferDataset(newInformation);
+        await Inferenzmotor.shared.putInferredTaxInformation(inferredInformation);
       }
     }
 
@@ -70,10 +68,13 @@ namespace Inferenzmotor {
     }
 
     // Infer a dataset based on the stored rules
-    public YearlyTaxData inferDataset(TaxInformation input)
+    public TaxInformation inferDataset(TaxInformation input)
     {
       RuleData result = RuleTraversal.traverseRuleTree(this.rules, new RuleData(input.toVariableMap()));
-      return TaxInformation.fromVariableMap(result.data).thisYear;
+      TaxInformation output = TaxInformation.fromVariableMap(result.data);
+      output.thisYear.inferred = true;
+      output.id = input.id;
+      return output;
     }
 
     public async Task putInferredTaxInformation(TaxInformation input)

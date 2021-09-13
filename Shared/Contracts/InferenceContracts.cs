@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.ServiceModel;
 using System.Threading.Tasks;
 
 
@@ -11,6 +12,7 @@ namespace Shared.Contracts
         public int value { get; set; }
     }
 
+    [ServiceContract]
     public interface IInferenceService
     {
         public ValueTask<InferenceResponse> getInference(IDRequest request);

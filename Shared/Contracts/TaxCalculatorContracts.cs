@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using System.ServiceModel;
 
 namespace Shared.Contracts
 {
@@ -10,6 +11,7 @@ namespace Shared.Contracts
         public int value { get; set; }
     }
 
+    [ServiceContract]
     public interface ITaxCalculatorService
     {
         public ValueTask<TaxCalculatorResponse> getTaxes(IDRequest request);

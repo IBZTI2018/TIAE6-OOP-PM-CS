@@ -96,6 +96,7 @@
                     <Label Content="Name" Grid.Column="1" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
                     <Label Content="Bedingung" Grid.Column="1" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
                     <Label Content="Transformation" Grid.Column="1" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="inferenceRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="268"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Steuerberechnerregeln">
@@ -116,6 +117,7 @@
                     <Label Content="Name" Grid.Column="1" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
                     <Label Content="Bedingung" Grid.Column="1" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
                     <Label Content="Transformation" Grid.Column="1" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="evaluationRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="268"/>
                 </Grid>
             </TabItem>
         </TabControl>

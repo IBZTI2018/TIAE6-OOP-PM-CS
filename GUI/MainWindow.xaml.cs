@@ -17,8 +17,7 @@ namespace GUI
     /// </summary>
     /// 
 
-    public partial class MainWindow : Window
-    {
+    public partial class MainWindow : Window {
         GrpcChannel DBChannel;
         GrpcChannel InferenceChannel;
         GrpcChannel TaxChannel;
@@ -28,10 +27,10 @@ namespace GUI
 
         public async void checkSystemStatus()
         {
-            var channels = new List<(dynamic circle, GrpcChannel channel)> { 
-                (dbStatusCircle, DBChannel), 
-                (inferenceStatusCircle, InferenceChannel), 
-                (taxStatusCircle, TaxChannel) 
+            var channels = new List<(dynamic circle, GrpcChannel channel)> {
+                (dbStatusCircle, DBChannel),
+                (inferenceStatusCircle, InferenceChannel),
+                (taxStatusCircle, TaxChannel)
             };
             foreach (var channel in channels) {
                 channel.circle.Fill = new SolidColorBrush(Colors.Gray);
@@ -78,7 +77,7 @@ namespace GUI
             {
 
             }
-            
+
         }
 
         private async void loadTaxDeclarations()
@@ -122,6 +121,48 @@ namespace GUI
                 item.Header = rule.rule;
                 item.Tag = rule.id;
                 item.IsExpanded = true;
+
+                // This is not an ideal way of adding listeners at all...
+                if (tree == this.inferenceRulesView)
+                {
+                    item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+                    {
+                        Rule rule = this.inferenceRules.Find(x => x.id == Convert.ToInt32((e.Source as TreeViewItem).Tag));
+                        this.inferenceRuleId.Text = Convert.ToString(rule.id);
+                        this.inferenceRuleName.Text = rule.rule;
+                        this.inferenceRuleCondition.Text = rule.condition;
+                        this.inferenceRuleTransformation.Text = rule.transformation;
+                        if (rule.parent != null)
+                        {
+                            this.inferenceRuleParent.Text = Convert.ToString(rule.parent.id);
+                        }
+                        else
+                        {
+                            this.inferenceRuleParent.Text = "-";
+                        }
+                    });
+                }
+
+                if (tree == this.evaluationRulesView)
+                {
+                    item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+                    {
+                        Rule rule = this.evaluationRules.Find(x => x.id == Convert.ToInt32((e.Source as TreeViewItem).Tag));
+                        this.evaluationRuleId.Text = Convert.ToString(rule.id);
+                        this.evaluationRuleName.Text = rule.rule;
+                        this.evaluationRuleCondition.Text = rule.condition;
+                        this.evaluationRuleTransformation.Text = rule.transformation;
+                        if (rule.parent != null)
+                        {
+                            this.evaluationRuleParent.Text = Convert.ToString(rule.parent.id);
+                        }
+                        else
+                        {
+                            this.evaluationRuleParent.Text = "-";
+                        }
+                    });
+                }
+
                 children[rule.id] = item;
 
                 // If the rule has a parent, we look to append it

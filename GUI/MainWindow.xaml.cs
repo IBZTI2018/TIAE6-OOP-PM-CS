@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using ProtoBuf.Grpc.Client;
 using Grpc.Net.Client;
 using Shared.Contracts;
@@ -21,6 +22,9 @@ namespace GUI
         GrpcChannel DBChannel;
         GrpcChannel InferenceChannel;
         GrpcChannel TaxChannel;
+
+        private List<Rule> inferenceRules;
+        private List<Rule> evaluationRules;
 
         public async void checkSystemStatus()
         {
@@ -91,6 +95,50 @@ namespace GUI
 
         }
 
+        private async void loadInferenceRules()
+        {
+            IRuleService ruleService = DBChannel.CreateGrpcService<IRuleService>();
+            InferenceRulesResponse inferenceRules = await ruleService.getInferenceRules(new EmptyRequest());
+            this.inferenceRules = inferenceRules.rules.ConvertAll(x => (Rule)x);
+            this.buildTree(this.inferenceRulesView, this.inferenceRules);
+        }
+
+        private async void loadEvaluationRules()
+        {
+            IRuleService ruleService = DBChannel.CreateGrpcService<IRuleService>();
+            EvaluationRulesResponse evaluationRules = await ruleService.getEvaluationRules(new EmptyRequest());
+            this.evaluationRules = evaluationRules.rules.ConvertAll(x => (Rule)x);
+            this.buildTree(this.evaluationRulesView, this.evaluationRules);
+        }
+
+        private void buildTree(TreeView tree, List<Rule> rules)
+        {
+            tree.Items.Clear();
+
+            Dictionary<int, TreeViewItem> children = new Dictionary<int, TreeViewItem>();
+            foreach (var rule in rules)
+            {
+                TreeViewItem item = new TreeViewItem();
+                item.Header = rule.rule;
+                item.Tag = rule.id;
+                item.IsExpanded = true;
+                children[rule.id] = item;
+
+                // If the rule has a parent, we look to append it
+                if (rule.parent != null && rule.parent.id != 0)
+                {
+                    if (children.ContainsKey(rule.parent.id))
+                    {
+                        children[rule.parent.id].Items.Add(item);
+                        continue;
+                    }
+                }
+
+                // Otherwise just add it to the bottom.
+                tree.Items.Add(item);
+            }
+        }
+
         public MainWindow()
         {
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
@@ -102,6 +150,8 @@ namespace GUI
             checkSystemStatus();
             loadPersons();
             loadTaxDeclarations();
+            loadInferenceRules();
+            loadEvaluationRules();
         }
 
         protected virtual void Dispose()

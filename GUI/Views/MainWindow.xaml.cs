@@ -199,5 +199,31 @@ namespace GUI
                 MessageBox.Show("Steuerberechner konnte seine Regeln nicht neu laden.");
             }
         }
+
+        private async void inferenceRuleSave_Click(object sender, RoutedEventArgs e)
+        {
+            InferenceRule updatedRule = new InferenceRule();
+            updatedRule.id = Convert.ToInt32(this.inferenceRuleId.Text);
+            updatedRule.parentId = Convert.ToInt32(this.inferenceRuleParent.Text);
+            updatedRule.rule = this.inferenceRuleName.Text;
+            updatedRule.condition = this.inferenceRuleCondition.Text;
+            updatedRule.transformation = this.inferenceRuleTransformation.Text;
+
+            List<Rule> newRules = await this.windowController.saveUpdatedInferenceRule(updatedRule);
+            this.buildTreeView(this.inferenceRulesView, newRules);
+        }
+
+        private async void evaluationRuleSave_Click(object sender, RoutedEventArgs e)
+        {
+            EvaluationRule updatedRule = new EvaluationRule();
+            updatedRule.id = Convert.ToInt32(this.evaluationRuleId.Text);
+            updatedRule.parentId = Convert.ToInt32(this.evaluationRuleParent.Text);
+            updatedRule.rule = this.evaluationRuleName.Text;
+            updatedRule.condition = this.evaluationRuleCondition.Text;
+            updatedRule.transformation = this.evaluationRuleTransformation.Text;
+
+            List<Rule> newRules = await this.windowController.saveUpdatedEvaluationRule(updatedRule);
+            this.buildTreeView(this.evaluationRulesView, newRules);
+        }
     }
 }

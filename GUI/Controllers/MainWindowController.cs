@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text;
-using Shared.Contracts;
 using GUI.Models;
 using Shared.Models;
 
@@ -75,12 +72,41 @@ namespace GUI.Controllers {
         this.declarationList = await this.databaseModel.getAllTaxDeclarations();
         return this.declarationList;
     }
+    
+    public async Task<List<Rule>> saveUpdatedInferenceRule(InferenceRule rule)
+    {
+        // TODO: Attempt to persist to database and catch eventual errors
+        
+        Rule oldRule = this.inferenceRules.Find(x => x.id == rule.id);
+        this.inferenceRules.Remove(oldRule);
+
+        Rule parentRule = this.inferenceRules.Find(x => x.id == rule.parentId);
+        rule.parent = parentRule;
+        this.inferenceRules.Add(rule);
+
+        return this.inferenceRules;
+    }
+
+
+    public async Task<List<Rule>> saveUpdatedEvaluationRule(EvaluationRule rule)
+    {
+        // TODO: Attempt to persist to database and catch eventual errors
+
+        Rule oldRule = this.evaluationRules.Find(x => x.id == rule.id);
+        this.evaluationRules.Remove(oldRule);
+
+        Rule parentRule = this.evaluationRules.Find(x => x.id == rule.parentId);
+        rule.parent = parentRule;
+        this.evaluationRules.Add(rule);
+
+        return this.evaluationRules;
+    }
 
     public void teardown()
     {
-      this.databaseModel.teardown();
-      this.inferenceModel.teardown();
-      this.evaluatorModel.teardown();
+        this.databaseModel.teardown();
+        this.inferenceModel.teardown();
+        this.evaluatorModel.teardown();
     }
   }
 }

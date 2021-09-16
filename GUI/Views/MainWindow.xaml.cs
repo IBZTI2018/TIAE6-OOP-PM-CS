@@ -21,9 +21,6 @@ namespace GUI
     public partial class MainWindow : Window {
         private MainWindowController windowController;
 
-        private List<Rule> inferenceRules;
-        private List<Rule> evaluationRules;
-
         public async void checkSystemStatus()
         {
             var statuses = await this.windowController.getServiceStatus();
@@ -44,6 +41,15 @@ namespace GUI
                     service.circle.Fill = new SolidColorBrush(color);
                 });
             }
+        }
+
+        public async void buildTreeViews()
+        {
+            List<Rule> inferrenceRules = await this.windowController.getAllInferrenceRules();
+            List<Rule> evaluationRules = await this.windowController.getAllEvaluationRules();
+
+            this.buildTreeView(this.inferenceRulesView, inferrenceRules);
+            this.buildTreeView(this.evaluationRulesView, evaluationRules);
         }
     /*
         private async void loadPersons()
@@ -80,24 +86,8 @@ namespace GUI
             }
 
         }
-
-        private async void loadInferenceRules()
-        {
-            IRuleService ruleService = DBChannel.CreateGrpcService<IRuleService>();
-            InferenceRulesResponse inferenceRules = await ruleService.getInferenceRules(new EmptyRequest());
-            this.inferenceRules = inferenceRules.rules.ConvertAll(x => (Rule)x);
-            this.buildTree(this.inferenceRulesView, this.inferenceRules);
-        }
-
-        private async void loadEvaluationRules()
-        {
-            IRuleService ruleService = DBChannel.CreateGrpcService<IRuleService>();
-            EvaluationRulesResponse evaluationRules = await ruleService.getEvaluationRules(new EmptyRequest());
-            this.evaluationRules = evaluationRules.rules.ConvertAll(x => (Rule)x);
-            this.buildTree(this.evaluationRulesView, this.evaluationRules);
-        }
-
-        private void buildTree(TreeView tree, List<Rule> rules)
+    */
+        private void buildTreeView(TreeView tree, List<Rule> rules)
         {
             tree.Items.Clear();
 
@@ -109,46 +99,8 @@ namespace GUI
                 item.Tag = rule.id;
                 item.IsExpanded = true;
 
-                // This is not an ideal way of adding listeners at all...
-                if (tree == this.inferenceRulesView)
-                {
-                    item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
-                    {
-                        Rule rule = this.inferenceRules.Find(x => x.id == Convert.ToInt32((e.Source as TreeViewItem).Tag));
-                        this.inferenceRuleId.Text = Convert.ToString(rule.id);
-                        this.inferenceRuleName.Text = rule.rule;
-                        this.inferenceRuleCondition.Text = rule.condition;
-                        this.inferenceRuleTransformation.Text = rule.transformation;
-                        if (rule.parent != null)
-                        {
-                            this.inferenceRuleParent.Text = Convert.ToString(rule.parent.id);
-                        }
-                        else
-                        {
-                            this.inferenceRuleParent.Text = "-";
-                        }
-                    });
-                }
-
-                if (tree == this.evaluationRulesView)
-                {
-                    item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
-                    {
-                        Rule rule = this.evaluationRules.Find(x => x.id == Convert.ToInt32((e.Source as TreeViewItem).Tag));
-                        this.evaluationRuleId.Text = Convert.ToString(rule.id);
-                        this.evaluationRuleName.Text = rule.rule;
-                        this.evaluationRuleCondition.Text = rule.condition;
-                        this.evaluationRuleTransformation.Text = rule.transformation;
-                        if (rule.parent != null)
-                        {
-                            this.evaluationRuleParent.Text = Convert.ToString(rule.parent.id);
-                        }
-                        else
-                        {
-                            this.evaluationRuleParent.Text = "-";
-                        }
-                    });
-                }
+                if (tree == this.inferenceRulesView) this.addInferrenceItemSelectHandler(item);
+                if (tree == this.evaluationRulesView) this.addEvaluatorItemSelectHandler(item);
 
                 children[rule.id] = item;
 
@@ -165,7 +117,47 @@ namespace GUI
                 // Otherwise just add it to the bottom.
                 tree.Items.Add(item);
             }
-        }*/
+        }
+
+        public void addInferrenceItemSelectHandler(TreeViewItem item)
+        {
+            item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+            {
+                Rule rule =this.windowController.getInferenceRule(Convert.ToInt32((e.Source as TreeViewItem).Tag));
+                this.inferenceRuleId.Text = Convert.ToString(rule.id);
+                this.inferenceRuleName.Text = rule.rule;
+                this.inferenceRuleCondition.Text = rule.condition;
+                this.inferenceRuleTransformation.Text = rule.transformation;
+                if (rule.parent != null)
+                {
+                    this.inferenceRuleParent.Text = Convert.ToString(rule.parent.id);
+                }
+                else
+                {
+                    this.inferenceRuleParent.Text = "-";
+                }
+            });
+        }
+
+        public void addEvaluatorItemSelectHandler(TreeViewItem item)
+        {
+            item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
+            {
+                Rule rule = this.windowController.getEvaluationRule(Convert.ToInt32((e.Source as TreeViewItem).Tag));
+                this.evaluationRuleId.Text = Convert.ToString(rule.id);
+                this.evaluationRuleName.Text = rule.rule;
+                this.evaluationRuleCondition.Text = rule.condition;
+                this.evaluationRuleTransformation.Text = rule.transformation;
+                if (rule.parent != null)
+                {
+                    this.evaluationRuleParent.Text = Convert.ToString(rule.parent.id);
+                }
+                else
+                {
+                    this.evaluationRuleParent.Text = "-";
+                }
+            });
+        }
 
         public MainWindow()
         {
@@ -176,6 +168,7 @@ namespace GUI
             InitializeComponent();
 
             this.checkSystemStatus();
+            this.buildTreeViews();
         }
 
         protected virtual void Dispose()

@@ -4,12 +4,16 @@ using System.Threading.Tasks;
 using System.Text;
 using Shared.Contracts;
 using GUI.Models;
+using Shared.Models;
 
 namespace GUI.Controllers {
   class MainWindowController {
     DatabaseModel databaseModel;
     InferenzmotorModel inferenceModel;
     SteuerberechnerModel evaluatorModel;
+
+    private List<Rule> inferenceRules;
+    private List<Rule> evaluationRules;
 
     public MainWindowController()
     {
@@ -32,6 +36,30 @@ namespace GUI.Controllers {
     {
       if (service == "inference") await this.inferenceModel.reloadRules();
       if (service == "evaluator") await this.evaluatorModel.reloadRules();
+    }
+
+    public async Task<List<Rule>> getAllInferrenceRules()
+    {
+      var list = await this.databaseModel.getAllInferenceRules();
+      this.inferenceRules = list.ConvertAll(x => (Rule)x);
+      return this.inferenceRules;
+    }
+
+    public Rule getInferenceRule(int id)
+    {
+      return this.inferenceRules.Find(x => x.id == id);
+    }
+
+    public async Task<List<Rule>> getAllEvaluationRules()
+    {
+      var list = await this.databaseModel.getAllEvaluationRules();
+      this.evaluationRules = list.ConvertAll(x => (Rule)x);
+      return this.evaluationRules;
+    }
+
+    public Rule getEvaluationRule(int id)
+    {
+      return this.evaluationRules.Find(x => x.id == id);
     }
 
     public void teardown()

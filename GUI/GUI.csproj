@@ -23,10 +23,6 @@
     <PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
   <Import Project="..\Shared\Shared.projitems" Label="Shared" />
 
 </Project>

@@ -21,5 +21,11 @@ namespace GUI.Models {
       StatusResponse response = await statusService.getStatus(new StatusRequest { ping = 1 });
       return response.pong == 1;
     }
+
+    public async Task reloadRules()
+    {
+      ITaxCalculatorService service = this.channel.CreateGrpcService<ITaxCalculatorService>();
+      BoolResponse response = await service.reloadRules(new EmptyRequest());
+    }
   }
 }

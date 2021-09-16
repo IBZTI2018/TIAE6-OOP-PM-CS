@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Collections.Generic;
 using Shared.Models;
-using GUI.Models;
+using GUI.Controllers;
 
 namespace GUI
 {
@@ -19,39 +19,30 @@ namespace GUI
     /// 
 
     public partial class MainWindow : Window {
-        DatabaseModel databaseModel;
-        InferenzmotorModel inferenceModel;
-        SteuerberechnerModel evaluatorModel;
+        private MainWindowController windowController;
 
         private List<Rule> inferenceRules;
         private List<Rule> evaluationRules;
 
         public async void checkSystemStatus()
         {
-            var services = new List<(dynamic circle, ModelWithServiceStatus model)> {
-                (this.dbStatusCircle, this.databaseModel),
-                (this.inferenceStatusCircle, this.inferenceModel),
-                (this.taxStatusCircle, this.evaluatorModel)
+            var statuses = await this.windowController.getServiceStatus();
+
+            var services = new List<(dynamic circle, bool status)> {
+                (this.dbStatusCircle, statuses["database"]),
+                (this.inferenceStatusCircle, statuses["inference"]),
+                (this.taxStatusCircle, statuses["evaluator"])
             };
 
             foreach (var service in services) {
                 service.circle.Fill = new SolidColorBrush(Colors.Gray);
                 await Task.Delay(500);
-                try
-                {
-                    bool status = await service.model.serviceIsRunning();
-                    Color color = status ? Colors.LightGreen : Colors.Red;
+               
+                Color color = service.status ? Colors.LightGreen : Colors.Red;
 
-                    Dispatcher.Invoke(() => {
-                        service.circle.Fill = new SolidColorBrush(color);
-                    });
-                }
-                catch (Exception e)
-                {
-                    Dispatcher.Invoke(() => {
-                        service.circle.Fill = new SolidColorBrush(Colors.Red);
-                    });
-                }
+                Dispatcher.Invoke(() => {
+                    service.circle.Fill = new SolidColorBrush(color);
+                });
             }
         }
     /*
@@ -179,42 +170,35 @@ namespace GUI
         public MainWindow()
         {
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
-            this.databaseModel = new DatabaseModel();
-            this.inferenceModel = new InferenzmotorModel();
-            this.evaluatorModel = new SteuerberechnerModel();
+            this.windowController = new MainWindowController();
 
             // Initialize form components
             InitializeComponent();
 
-            checkSystemStatus();
+            this.checkSystemStatus();
         }
 
         protected virtual void Dispose()
         {
-            this.databaseModel.teardown();
-            this.inferenceModel.teardown();
-            this.evaluatorModel.teardown();
+            this.windowController.teardown();
+            this.windowController = null;
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-      /*
             checkSystemStatus();
-            loadPersons();
-            loadTaxDeclarations();*/
+            // loadPersons();
+            // loadTaxDeclarations();
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-      /*
-            IInferenceService service = this.InferenceChannel.CreateGrpcService<IInferenceService>();
-            BoolResponse response = await service.reloadRules(new EmptyRequest());*/
+            await this.windowController.reloadRulesFor("inference");
         }
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
-        {/*
-            ITaxCalculatorService service = this.TaxChannel.CreateGrpcService<ITaxCalculatorService>();
-            BoolResponse response = await service.reloadRules(new EmptyRequest());*/
+        {
+            await this.windowController.reloadRulesFor("evaluator");
         }
     }
 }

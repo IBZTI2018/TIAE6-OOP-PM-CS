@@ -12,6 +12,8 @@ namespace GUI.Controllers {
     InferenzmotorModel inferenceModel;
     SteuerberechnerModel evaluatorModel;
 
+    private List<Person> personList;
+    private List<TaxDeclaration> declarationList;
     private List<Rule> inferenceRules;
     private List<Rule> evaluationRules;
 
@@ -60,6 +62,18 @@ namespace GUI.Controllers {
     public Rule getEvaluationRule(int id)
     {
       return this.evaluationRules.Find(x => x.id == id);
+    }
+
+    public async Task<List<Person>> getAllPersons()
+    {
+        this.personList = await this.databaseModel.getAllPersons();
+        return this.personList;
+    }
+
+    public async Task<List<TaxDeclaration>> getAllTaxDeclarations()
+    {
+        this.declarationList = await this.databaseModel.getAllTaxDeclarations();
+        return this.declarationList;
     }
 
     public void teardown()

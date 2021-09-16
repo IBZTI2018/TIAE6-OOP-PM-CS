@@ -36,5 +36,19 @@ namespace GUI.Models {
       EvaluationRulesResponse evaluationRules = await ruleService.getEvaluationRules(new EmptyRequest());
       return evaluationRules.rules;
     }
+
+    public async Task<List<Person>> getAllPersons()
+    {
+        IPersonService personService = this.channel.CreateGrpcService<IPersonService>();
+        PersonListResponse response = await personService.getPersonAll(new EmptyRequest());
+        return response.personList;
+    }
+
+    public async Task<List<TaxDeclaration>> getAllTaxDeclarations()
+    {
+        ITaxDeclarationService taxDeclarationService = this.channel.CreateGrpcService<ITaxDeclarationService>();
+        TaxDeclarationListResponse response = await taxDeclarationService.getAllTaxDeclarations(new EmptyRequest());
+        return response.declarationList;
+    }
   }
 }

@@ -51,42 +51,31 @@ namespace GUI
             this.buildTreeView(this.inferenceRulesView, inferrenceRules);
             this.buildTreeView(this.evaluationRulesView, evaluationRules);
         }
-    /*
+    
         private async void loadPersons()
         {
-            try
+            List<Person> persons = await this.windowController.getAllPersons();
+            this.personListView.Items.Clear();
+            foreach (Person person in persons)
             {
-                IPersonService personService = DBChannel.CreateGrpcService<IPersonService>();
-                PersonListResponse response = await personService.getPersonAll(new EmptyRequest());
-                this.personListView.Items.Clear();
-                foreach (Person person in response.personList)
-                {
-                    Dispatcher.Invoke(() => {
-                        this.personListView.Items.Add(person);
-                    });
-                }
+                Dispatcher.Invoke(() => {
+                    this.personListView.Items.Add(person);
+                });
             }
-            catch
-            {
-
-            }
-
         }
 
         private async void loadTaxDeclarations()
         {
-            ITaxDeclarationService taxDeclarationService = DBChannel.CreateGrpcService<ITaxDeclarationService>();
-            TaxDeclarationListResponse response = await taxDeclarationService.getAllTaxDeclarations(new EmptyRequest());
+            List<TaxDeclaration> declarations = await this.windowController.getAllTaxDeclarations();
             this.taxDeclarationListView.Items.Clear();
-            foreach (TaxDeclaration declaration in response.declarationList)
+            foreach (TaxDeclaration declaration in declarations)
             {
                 Dispatcher.Invoke(() => {
                     this.taxDeclarationListView.Items.Add(declaration);
                 });
             }
-
         }
-    */
+    
         private void buildTreeView(TreeView tree, List<Rule> rules)
         {
             tree.Items.Clear();
@@ -168,6 +157,8 @@ namespace GUI
             InitializeComponent();
 
             this.checkSystemStatus();
+            this.loadPersons();
+            this.loadTaxDeclarations();
             this.buildTreeViews();
         }
 
@@ -179,9 +170,9 @@ namespace GUI
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            checkSystemStatus();
-            // loadPersons();
-            // loadTaxDeclarations();
+            this.checkSystemStatus();
+            this.loadPersons();
+            this.loadTaxDeclarations();
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)

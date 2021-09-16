@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Collections.Generic;
 using Shared.Models;
+using GUI.Models;
 
 namespace GUI
 {
@@ -18,47 +19,42 @@ namespace GUI
     /// 
 
     public partial class MainWindow : Window {
-        GrpcChannel DBChannel;
-        GrpcChannel InferenceChannel;
-        GrpcChannel TaxChannel;
+        DatabaseModel databaseModel;
+        InferenzmotorModel inferenceModel;
+        SteuerberechnerModel evaluatorModel;
 
         private List<Rule> inferenceRules;
         private List<Rule> evaluationRules;
 
         public async void checkSystemStatus()
         {
-            var channels = new List<(dynamic circle, GrpcChannel channel)> {
-                (dbStatusCircle, DBChannel),
-                (inferenceStatusCircle, InferenceChannel),
-                (taxStatusCircle, TaxChannel)
+            var services = new List<(dynamic circle, ModelWithServiceStatus model)> {
+                (this.dbStatusCircle, this.databaseModel),
+                (this.inferenceStatusCircle, this.inferenceModel),
+                (this.taxStatusCircle, this.evaluatorModel)
             };
-            foreach (var channel in channels) {
-                channel.circle.Fill = new SolidColorBrush(Colors.Gray);
+
+            foreach (var service in services) {
+                service.circle.Fill = new SolidColorBrush(Colors.Gray);
                 await Task.Delay(500);
                 try
                 {
-                    IStatusService statusService = channel.channel.CreateGrpcService<IStatusService>();
-                    StatusResponse response = await statusService.getStatus(new StatusRequest { ping = 1 });
-                    if (response.pong != 1)
-                    {
-                        throw new Exception();
-                    }
+                    bool status = await service.model.serviceIsRunning();
+                    Color color = status ? Colors.LightGreen : Colors.Red;
 
                     Dispatcher.Invoke(() => {
-                        // Update GUI inside async func
-                        channel.circle.Fill = new SolidColorBrush(Colors.LightGreen);
+                        service.circle.Fill = new SolidColorBrush(color);
                     });
                 }
                 catch (Exception e)
                 {
                     Dispatcher.Invoke(() => {
-                        // Update GUI inside async func
-                        channel.circle.Fill = new SolidColorBrush(Colors.Red);
+                        service.circle.Fill = new SolidColorBrush(Colors.Red);
                     });
                 }
             }
         }
-
+    /*
         private async void loadPersons()
         {
             try
@@ -178,47 +174,47 @@ namespace GUI
                 // Otherwise just add it to the bottom.
                 tree.Items.Add(item);
             }
-        }
+        }*/
 
         public MainWindow()
         {
             GrpcClientFactory.AllowUnencryptedHttp2 = true;
-            DBChannel = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT);
-            InferenceChannel = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.INFERENCE_PORT);
-            TaxChannel = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.TAX_PORT);
+            this.databaseModel = new DatabaseModel();
+            this.inferenceModel = new InferenzmotorModel();
+            this.evaluatorModel = new SteuerberechnerModel();
 
+            // Initialize form components
             InitializeComponent();
+
             checkSystemStatus();
-            loadPersons();
-            loadTaxDeclarations();
-            loadInferenceRules();
-            loadEvaluationRules();
         }
 
         protected virtual void Dispose()
         {
-            DBChannel.Dispose();
-            InferenceChannel.Dispose();
-            TaxChannel.Dispose();
+            this.databaseModel.teardown();
+            this.inferenceModel.teardown();
+            this.evaluatorModel.teardown();
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
+      /*
             checkSystemStatus();
             loadPersons();
-            loadTaxDeclarations();
+            loadTaxDeclarations();*/
         }
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
+      /*
             IInferenceService service = this.InferenceChannel.CreateGrpcService<IInferenceService>();
-            BoolResponse response = await service.reloadRules(new EmptyRequest());
+            BoolResponse response = await service.reloadRules(new EmptyRequest());*/
         }
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
-        {
+        {/*
             ITaxCalculatorService service = this.TaxChannel.CreateGrpcService<ITaxCalculatorService>();
-            BoolResponse response = await service.reloadRules(new EmptyRequest());
+            BoolResponse response = await service.reloadRules(new EmptyRequest());*/
         }
     }
 }

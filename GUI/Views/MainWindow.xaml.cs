@@ -228,12 +228,64 @@ namespace GUI
 
         private void inferenceRuleNew_Click(object sender, RoutedEventArgs e)
         {
+            TreeViewItem root = null;
+            foreach (TreeViewItem item in this.inferenceRulesView.Items)
+            {
+                root = item;
+            }
 
+            if (root == null) return;
+
+            this.inferenceRuleId.Text = "";
+            this.inferenceRuleParent.Text = this.getParentFromTree(root);
+            this.inferenceRuleName.Text = "";
+            this.inferenceRuleCondition.Text = "";
+            this.inferenceRuleTransformation.Text = "";
         }
 
         private void evaluationRuleNew_Click(object sender, RoutedEventArgs e)
         {
+            TreeViewItem root = null;
+            foreach (TreeViewItem item in this.evaluationRulesView.Items)
+            {
+                root = item;
+            }
 
+            if (root == null) return;
+
+            this.evaluationRuleId.Text = "";
+            this.evaluationRuleParent.Text = this.getParentFromTree(root);
+            this.evaluationRuleName.Text = "";
+            this.evaluationRuleCondition.Text = "";
+            this.evaluationRuleTransformation.Text = "";
+        }
+
+        private string getParentFromTree(TreeViewItem root)
+        {
+            String possibleParent = "";
+            List<TreeViewItem> items = this.getNodeChildren(root);
+            foreach (TreeViewItem item in items)
+            {
+                if (item.IsSelected) possibleParent = Convert.ToString(item.Tag);
+            }
+            return possibleParent;
+        }
+
+        private List<TreeViewItem> getNodeChildren(TreeViewItem item)
+        {
+            List<TreeViewItem> list = new List<TreeViewItem>();
+            list.Add(item);
+
+            if (item.Items.Count > 0)
+            {
+                foreach (TreeViewItem child in item.Items)
+                {
+                    List<TreeViewItem> nested = getNodeChildren(child);
+                    nested.ForEach(x => list.Add(x));
+                }
+            }
+
+            return list;
         }
     }
 }

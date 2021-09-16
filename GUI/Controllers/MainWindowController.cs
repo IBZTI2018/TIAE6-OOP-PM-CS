@@ -73,6 +73,17 @@ namespace GUI.Controllers {
         return this.declarationList;
     }
     
+    public async Task<List<Rule>> saveAddedInferenceRule(InferenceRule rule)
+    {
+        // TODO: Attempt to persist to database and catch eventual errors
+        
+        Rule parentRule = this.inferenceRules.Find(x => x.id == rule.parentId);
+        rule.parent = parentRule;
+        this.inferenceRules.Add(rule);
+
+        return this.inferenceRules;
+    }
+
     public async Task<List<Rule>> saveUpdatedInferenceRule(InferenceRule rule)
     {
         // TODO: Attempt to persist to database and catch eventual errors
@@ -87,6 +98,17 @@ namespace GUI.Controllers {
         return this.inferenceRules;
     }
 
+
+    public async Task<List<Rule>> saveAddedEvaluationRule(EvaluationRule rule)
+    {
+        // TODO: Attempt to persist to database and catch eventual errors
+        
+        Rule parentRule = this.evaluationRules.Find(x => x.id == rule.parentId);
+        rule.parent = parentRule;
+        this.evaluationRules.Add(rule);
+
+        return this.evaluationRules;
+    }
 
     public async Task<List<Rule>> saveUpdatedEvaluationRule(EvaluationRule rule)
     {

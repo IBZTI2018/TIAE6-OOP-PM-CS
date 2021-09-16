@@ -225,5 +225,15 @@ namespace GUI
             List<Rule> newRules = await this.windowController.saveUpdatedEvaluationRule(updatedRule);
             this.buildTreeView(this.evaluationRulesView, newRules);
         }
+
+        private void inferenceRuleNew_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void evaluationRuleNew_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

@@ -96,29 +96,30 @@
                     <Label Content="Name" Grid.Column="1" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
                     <Label Content="Bedingung" Grid.Column="1" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
                     <Label Content="Transformation" Grid.Column="1" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="inferenceRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="268" Click="inferenceRuleSave_Click"/>
+                    <Button x:Name="inferenceRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="127" Click="inferenceRuleSave_Click"/>
+                    <Button x:Name="inferenceRuleNew" Content="Neue Regel" Grid.Column="1" HorizontalAlignment="Left" Margin="274,363,0,0" VerticalAlignment="Top" Width="126" Click="inferenceRuleNew_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Steuerberechnerregeln">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="257*" />
-                        <ColumnDefinition Width="48*"/>
-                        <ColumnDefinition Width="458*" />
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="3*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TreeView x:Name="evaluationRulesView" Grid.Column="0" Grid.ColumnSpan="2" />
-                    <TextBox x:Name="evaluationRuleId" Grid.Column="2" HorizontalAlignment="Left" Margin="132,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <TextBox x:Name="evaluationRuleParent" Grid.Column="2" HorizontalAlignment="Left" Margin="132,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBox x:Name="evaluationRuleName" Grid.Column="2" HorizontalAlignment="Left" Margin="132,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBox x:Name="evaluationRuleCondition" Grid.Column="2" HorizontalAlignment="Left" Margin="132,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
-                    <TextBox x:Name="evaluationRuleTransformation" Grid.Column="2" HorizontalAlignment="Left" Margin="132,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
-                    <Label Content="ID" Grid.Column="2" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Parent" Grid.Column="2" HorizontalAlignment="Left" Margin="30,77,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Name" Grid.Column="2" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Bedingung" Grid.Column="2" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Transformation" Grid.Column="2" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="evaluationRuleSave" Content="Speichern" Grid.Column="2" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="268" Click="evaluationRuleSave_Click"/>
+                    <TreeView x:Name="evaluationRulesView" Grid.Column="0" />
+                    <TextBox x:Name="evaluationRuleId" Grid.Column="1" HorizontalAlignment="Left" Margin="132,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <TextBox x:Name="evaluationRuleParent" Grid.Column="1" HorizontalAlignment="Left" Margin="132,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="evaluationRuleName" Grid.Column="1" HorizontalAlignment="Left" Margin="132,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="evaluationRuleCondition" Grid.Column="1" HorizontalAlignment="Left" Margin="132,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
+                    <TextBox x:Name="evaluationRuleTransformation" Grid.Column="1" HorizontalAlignment="Left" Margin="132,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
+                    <Label Content="ID" Grid.Column="1" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Parent" Grid.Column="1" HorizontalAlignment="Left" Margin="30,77,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Name" Grid.Column="1" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Bedingung" Grid.Column="1" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Transformation" Grid.Column="1" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="evaluationRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="127" Click="evaluationRuleSave_Click"/>
+                    <Button x:Name="evaluationRuleNew" Content="Neue Regel" Grid.Column="1" HorizontalAlignment="Left" Margin="274,363,0,0" VerticalAlignment="Top" Width="126"/>
                 </Grid>
             </TabItem>
         </TabControl>

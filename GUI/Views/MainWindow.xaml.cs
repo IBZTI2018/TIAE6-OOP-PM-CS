@@ -177,12 +177,27 @@ namespace GUI
 
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
-            await this.windowController.reloadRulesFor("inference");
+            try
+            {
+                await this.windowController.reloadRulesFor("inference");
+                MessageBox.Show("Inferenzmotor hat seine Regeln neu geladen.");
+            } catch
+            {
+                MessageBox.Show("Inferenzmotor konnte seine Regeln nicht neu laden.");
+            }
         }
 
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
-            await this.windowController.reloadRulesFor("evaluator");
+            try
+            {
+                await this.windowController.reloadRulesFor("evaluator");
+                MessageBox.Show("Inferenzmotor hat seine Regeln neu geladen.");
+            }
+            catch
+            {
+                MessageBox.Show("Steuerberechner konnte seine Regeln nicht neu laden.");
+            }
         }
     }
 }

@@ -33,7 +33,7 @@ namespace GUI
 
             foreach (var service in services) {
                 service.circle.Fill = new SolidColorBrush(Colors.Gray);
-                await Task.Delay(500);
+                await Task.Delay(100);
                
                 Color color = service.status ? Colors.LightGreen : Colors.Red;
 

@@ -65,13 +65,14 @@ namespace DB.Contracts
 
         TaxInformationResponse buildTaxInformationResponse(bool checkInferred = false, bool checkCalculated = false)
         {
-            TaxDeclaration thisYearDeclaration;
+            TaxDeclaration thisYearDeclaration = null;
             using (var ctx = new TIAE6Context())
             {
-                thisYearDeclaration = ctx.taxDeclarations
-                    .Include("Entries")
-                    .Include("Entries.attribute")
-                    .FirstOrDefault(x => x.isApproved == false || x.isSent == false);
+                var entry = ctx.taxDeclarationEntries.Include(x => x.taxDeclaration).FirstOrDefault(x => (x.taxDeclarationAttributeId == 4 && x.value == 0) || (x.taxDeclarationAttributeId == 5 && x.value == 0));
+                if (entry != null)
+                {
+                    thisYearDeclaration = ctx.taxDeclarations.Include("Entries").Include("Entries.attribute").FirstOrDefault(x => x.id == entry.taxDeclaration.id);
+                }
             }
 
             TaxInformation returnObj = new TaxInformation();
@@ -81,7 +82,7 @@ namespace DB.Contracts
                 TaxDeclaration lastDeclaration;
                 using (var ctx = new TIAE6Context())
                 {
-                    lastDeclaration = ctx.taxDeclarations.Include("Entries").FirstOrDefault(x => x.year == thisYearDeclaration.year - 1);
+                    lastDeclaration = ctx.taxDeclarations.Include("Entries").Include("Entries.attribute").FirstOrDefault(x => x.year == thisYearDeclaration.year - 1);
                 }
 
                 var newTaxInformation = buildTaxInformation(thisYearDeclaration, lastDeclaration);

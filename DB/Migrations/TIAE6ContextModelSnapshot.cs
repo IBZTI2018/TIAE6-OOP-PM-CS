@@ -117,6 +117,9 @@ namespace DB.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("active")
+                        .HasColumnType("bit");
+
                     b.Property<string>("condition")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

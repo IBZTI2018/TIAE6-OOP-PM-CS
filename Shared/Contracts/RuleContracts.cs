@@ -7,6 +7,27 @@ using Shared.Models;
 namespace Shared.Contracts
 {
     [DataContract]
+    public class RuleRequest
+    {
+        [DataMember(Order = 1)]
+        public Rule rule { get; set; }
+    }
+
+    [DataContract]
+    public class InferenceRuleRequest
+    {
+        [DataMember(Order = 1)]
+        public InferenceRule rule { get; set; }
+    }
+
+    [DataContract]
+    public class EvaluationRuleRequest
+    {
+        [DataMember(Order = 1)]
+        public EvaluationRule rule { get; set; }
+    }
+
+    [DataContract]
     public class InferenceRulesResponse
     {
         [DataMember(Order = 1)]
@@ -25,5 +46,8 @@ namespace Shared.Contracts
     {
         public ValueTask<InferenceRulesResponse> getInferenceRules(EmptyRequest request);
         public ValueTask<EvaluationRulesResponse> getEvaluationRules(EmptyRequest request);
+        public ValueTask<BoolResponse> toggleActiveRule(RuleRequest request);
+        public ValueTask<BoolResponse> saveNewInferenceRule(InferenceRuleRequest request);
+        public ValueTask<BoolResponse> saveNewEvaluationRule(EvaluationRuleRequest request);
     }
 }

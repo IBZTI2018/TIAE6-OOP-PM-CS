@@ -12,10 +12,25 @@ namespace Shared.Contracts
         [DataMember(Order = 1)]
         public List<TaxDeclaration> declarationList { get; set; }
     }
+    [DataContract]
+    public class NewTaxDeclarationRequest
+    {
+        [DataMember(Order = 1)]
+        public decimal income { get; set; }
+        [DataMember(Order = 2)]
+        public decimal deductions { get; set; }
+        [DataMember(Order = 3)]
+        public decimal taxDue { get; set; }
+        [DataMember(Order = 4)]
+        public int year { get; set; }
+        [DataMember(Order = 5)]
+        public int personId { get; set; }
+    }
 
     [ServiceContract]
     public interface ITaxDeclarationService
     {
         public ValueTask<TaxDeclarationListResponse> getAllTaxDeclarations(EmptyRequest request);
+        public ValueTask<BoolResponse> createNewTaxDeckaration(NewTaxDeclarationRequest request);
     }
 }

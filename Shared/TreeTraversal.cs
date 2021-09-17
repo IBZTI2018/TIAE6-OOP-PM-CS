@@ -88,7 +88,7 @@ namespace Shared.TreeTraversal {
             // Check if condition is true. If not, continue.
             if (child.condition == null) child.condition = "true";
             if (RuleParser.evaluateAsCondition(child.condition, data)) {
-              if (child.transformation != null && child.transformation != "")
+              if (child.transformation != null && child.transformation != "" && child.active)
               {
                 data = RuleParser.evaluateAsTransformation(child.transformation, data);
               } 

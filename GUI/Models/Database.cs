@@ -50,5 +50,39 @@ namespace GUI.Models {
         TaxDeclarationListResponse response = await taxDeclarationService.getAllTaxDeclarations(new EmptyRequest());
         return response.declarationList;
     }
+
+    public async Task<bool> saveNewInferenceRule(InferenceRule argRule)
+    {
+        IRuleService ruleService = this.channel.CreateGrpcService<IRuleService>();
+        BoolResponse response = await ruleService.saveNewInferenceRule(new InferenceRuleRequest { rule = argRule });
+        return response.success;
+    }
+
+    public async Task<bool> saveNewEvaluationRule(EvaluationRule argRule)
+    {
+        IRuleService ruleService = this.channel.CreateGrpcService<IRuleService>();
+        BoolResponse response = await ruleService.saveNewEvaluationRule(new EvaluationRuleRequest { rule = argRule });
+        return response.success;
+    }
+
+    public async Task<bool> toggleActiveRule(Rule argRule)
+    {
+        IRuleService ruleService = this.channel.CreateGrpcService<IRuleService>();
+        BoolResponse response = await ruleService.toggleActiveRule(new RuleRequest { rule = argRule });
+        return response.success;
+    }
+
+    public async Task<bool> createNewTaxDeckaration(decimal argIncome, decimal argDeductions, decimal argTaxDue, int argYear, int argPersonId)
+    {
+        ITaxDeclarationService taxDeclarationService = this.channel.CreateGrpcService<ITaxDeclarationService>();
+        BoolResponse response = await taxDeclarationService.createNewTaxDeckaration(new NewTaxDeclarationRequest {
+            income = argIncome,
+            deductions = argDeductions,
+            taxDue = argTaxDue,
+            year = argYear,
+            personId = argPersonId
+        });
+        return response.success;
+    }
   }
 }

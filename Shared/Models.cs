@@ -98,16 +98,21 @@ namespace Shared.Models
         [Required]
         [ProtoMember(1)]
         public string rule { get; set; }
+
+        [ProtoMember(2)]
         public int? parentId { get; set; }
         [ForeignKey("parentId")]
-        [ProtoMember(2)]
+        [ProtoMember(3)]
         public Rule parent { get; set; }
         [Required]
-        [ProtoMember(3)]
+        [ProtoMember(4)]
         public string condition { get; set; }
         [Required]
-        [ProtoMember(4)]
+        [ProtoMember(5)]
         public string transformation { get; set; }
+        [Required]
+        [ProtoMember(6)]
+        public bool active { get; set; }
     }
     [ProtoContract]
     public class InferenceRule : Rule { }
@@ -140,43 +145,53 @@ namespace Shared.Models
         [InverseProperty("taxDeclaration")]
         public virtual ICollection<TaxDeclarationEntry> Entries { get; set; }
 
-        public bool isInferred
+        [NotMapped]
+        [ProtoMember(6)]
+        public bool isInferred { get; set; }
+        [NotMapped]
+        [ProtoMember(7)]
+        public bool isCalculated { get; set; }
+        [NotMapped]
+        [ProtoMember(8)]
+        public decimal Income { get; set; }
+        [NotMapped]
+        [ProtoMember(9)]
+        public decimal Deductions { get; set; }
+        [NotMapped]
+        [ProtoMember(10)]
+        public decimal TaxDue { get; set; }
+
+        public bool getIsInferred()
         {
-            get
+            if (this.Entries.Count > 0)
             {
-                if (this.Entries.Count > 0)
+                bool localIsInferred = false;
+                foreach (var entry in this.Entries)
                 {
-                    bool localIsInferred = false;
-                    foreach (var entry in this.Entries)
+                    if (entry.attribute.name == "Inferred")
                     {
-                        if (entry.attribute.name == "Inferred")
-                        {
-                            localIsInferred = true;
-                        }
+                        localIsInferred = entry.value == 1;
                     }
-                    return localIsInferred;
                 }
-                return false;
+                return localIsInferred;
             }
+            return false;
         }
-        public bool isCalculated
+        public bool getIsCalculated()
         {
-            get
+            if (this.Entries.Count > 0)
             {
-                if (this.Entries.Count > 0)
+                bool localIsCalculated = false;
+                foreach (var entry in this.Entries)
                 {
-                    bool localIsCalculated = false;
-                    foreach (var entry in this.Entries)
+                    if (entry.attribute.name == "Calculated")
                     {
-                        if (entry.attribute.name == "Calculated")
-                        {
-                            localIsCalculated = true;
-                        }
+                        localIsCalculated = entry.value == 1;
                     }
-                    return localIsCalculated;
                 }
-                return false;
+                return localIsCalculated;
             }
+            return false;
         }
     }
 

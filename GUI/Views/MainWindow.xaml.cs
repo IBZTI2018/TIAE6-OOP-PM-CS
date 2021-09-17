@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Collections.Generic;
 using Shared.Models;
 using GUI.Controllers;
+using System.Linq;
 
 namespace GUI
 {
@@ -20,6 +21,8 @@ namespace GUI
 
     public partial class MainWindow : Window {
         private MainWindowController windowController;
+        private InferenceRule currentInferenceRule;
+        private EvaluationRule currentEvaluationRule;
 
         public async void checkSystemStatus()
         {
@@ -43,7 +46,7 @@ namespace GUI
             }
         }
 
-        public async void buildTreeViews()
+        public async Task buildTreeViews()
         {
             List<Rule> inferrenceRules = await this.windowController.getAllInferrenceRules();
             List<Rule> evaluationRules = await this.windowController.getAllEvaluationRules();
@@ -55,11 +58,11 @@ namespace GUI
         private async void loadPersons()
         {
             List<Person> persons = await this.windowController.getAllPersons();
-            this.personListView.Items.Clear();
+            this.personComboBox.Items.Clear();
             foreach (Person person in persons)
             {
                 Dispatcher.Invoke(() => {
-                    this.personListView.Items.Add(person);
+                    this.personComboBox.Items.Add(person);
                 });
             }
         }
@@ -85,6 +88,10 @@ namespace GUI
             {
                 TreeViewItem item = new TreeViewItem();
                 item.Header = rule.rule;
+                if (rule.active == false)
+                {
+                    item.Header += " (DEAKTIVIERT)";
+                }
                 item.Tag = rule.id;
                 item.IsExpanded = true;
 
@@ -113,6 +120,8 @@ namespace GUI
             item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
             {
                 Rule rule =this.windowController.getInferenceRule(Convert.ToInt32((e.Source as TreeViewItem).Tag));
+                this.currentInferenceRule = (InferenceRule)rule;
+
                 this.inferenceRuleId.Text = Convert.ToString(rule.id);
                 this.inferenceRuleName.Text = rule.rule;
                 this.inferenceRuleCondition.Text = rule.condition;
@@ -125,6 +134,16 @@ namespace GUI
                 {
                     this.inferenceRuleParent.Text = "-";
                 }
+
+                if (rule.active)
+                {
+                    this.inferenceRuleToggleActive.Content = "Deaktivieren";
+                }
+                else
+                {
+                    this.inferenceRuleToggleActive.Content = "Aktivieren";
+                }
+
             });
         }
 
@@ -133,6 +152,8 @@ namespace GUI
             item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
             {
                 Rule rule = this.windowController.getEvaluationRule(Convert.ToInt32((e.Source as TreeViewItem).Tag));
+                this.currentEvaluationRule = (EvaluationRule)rule;
+
                 this.evaluationRuleId.Text = Convert.ToString(rule.id);
                 this.evaluationRuleName.Text = rule.rule;
                 this.evaluationRuleCondition.Text = rule.condition;
@@ -144,6 +165,15 @@ namespace GUI
                 else
                 {
                     this.evaluationRuleParent.Text = "-";
+                }
+
+                if (rule.active)
+                {
+                    this.evaluationRuleToggleActive.Content = "Deaktivieren";
+                }
+                else
+                {
+                    this.evaluationRuleToggleActive.Content = "Aktivieren";
                 }
             });
         }
@@ -212,16 +242,8 @@ namespace GUI
             updatedRule.condition = this.inferenceRuleCondition.Text;
             updatedRule.transformation = this.inferenceRuleTransformation.Text;
 
-            List<Rule> newRules;
-            if (isNewRule)
-            {
-                newRules = await this.windowController.saveAddedInferenceRule(updatedRule);
-            }
-            else
-            {
-                newRules = await this.windowController.saveUpdatedInferenceRule(updatedRule);
-            }
-            this.buildTreeView(this.inferenceRulesView, newRules);
+            await this.windowController.saveNewInferenceRule(updatedRule);
+            await this.buildTreeViews();
         }
 
         private async void evaluationRuleSave_Click(object sender, RoutedEventArgs e)
@@ -236,16 +258,8 @@ namespace GUI
             updatedRule.condition = this.evaluationRuleCondition.Text;
             updatedRule.transformation = this.evaluationRuleTransformation.Text;
 
-            List<Rule> newRules;
-            if (isNewRule)
-            {
-                newRules = await this.windowController.saveAddedEvaluationRule(updatedRule);
-            }
-            else
-            {
-                newRules = await this.windowController.saveUpdatedEvaluationRule(updatedRule);
-            }
-            this.buildTreeView(this.evaluationRulesView, newRules);
+            await this .windowController.saveNewEvaluationRule(updatedRule);
+            await this.buildTreeViews();
         }
 
         private void inferenceRuleNew_Click(object sender, RoutedEventArgs e)
@@ -308,6 +322,79 @@ namespace GUI
             }
 
             return list;
+        }
+
+        private async void evaluationRuleToggleActive_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.currentEvaluationRule != null)
+            {
+                await this.windowController.toggleActiveRule(this.currentEvaluationRule);
+                await this.windowController.reloadRulesFor("evaluator");
+                this.buildTreeViews();
+            }
+        }
+
+        private async void inferenceRuleToggleActive_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.currentInferenceRule != null)
+            {
+                await this.windowController.toggleActiveRule(this.currentInferenceRule);
+                await this.windowController.reloadRulesFor("inference");
+                this.buildTreeViews();
+            }
+        }
+
+        private async void sendTaxDeclaration_Click(object sender, RoutedEventArgs e)
+        {
+            decimal income, deductions, taxDue;
+            int year, personId = 0;
+
+            if (!decimal.TryParse(tdIncome.Text, out income))
+            {
+                Dispatcher.Invoke(() => MessageBox.Show("Umsatz ist keine gültige Zahl"));
+                return;
+            }
+
+            if (!int.TryParse(tdYear.Text, out year))
+            {
+                Dispatcher.Invoke(() => MessageBox.Show("Jahr ist keine gültige Zahl"));
+                return;
+            }
+
+            if (!decimal.TryParse(tdDeductions.Text, out deductions))
+            {
+                Dispatcher.Invoke(() => MessageBox.Show("Abzüge ist keine gültige Zahl"));
+                return;
+            }
+
+            if (!decimal.TryParse(tdTaxDue.Text, out taxDue))
+            {
+                Dispatcher.Invoke(() => MessageBox.Show("Vermögen ist keine gültige Zahl"));
+                return;
+            }
+
+            Person person = (Person)this.personComboBox.SelectedItem;
+            if (person != null)
+            {
+                personId = person.id;
+            }
+
+            bool response = await this.windowController.createNewTaxDeckaration(income, deductions, taxDue, year, personId);
+
+            if (response)
+            {
+                Dispatcher.Invoke(() => MessageBox.Show("Die neue Steuererklärung wurde werfolgreich eingereicht."));
+            } else
+            {
+                Dispatcher.Invoke(() => MessageBox.Show("Ein Fehler is aufgetreten."));
+            }
+
+            this.loadTaxDeclarations();
+        }
+
+        private async void reloadTaxDeclarationBtn_Click(object sender, RoutedEventArgs e)
+        {
+            this.loadTaxDeclarations();
         }
     }
 }

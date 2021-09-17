@@ -72,56 +72,25 @@ namespace GUI.Controllers {
         this.declarationList = await this.databaseModel.getAllTaxDeclarations();
         return this.declarationList;
     }
-    
-    public async Task<List<Rule>> saveAddedInferenceRule(InferenceRule rule)
-    {
-        // TODO: Attempt to persist to database and catch eventual errors
-        
-        Rule parentRule = this.inferenceRules.Find(x => x.id == rule.parentId);
-        rule.parent = parentRule;
-        this.inferenceRules.Add(rule);
 
-        return this.inferenceRules;
+    public async Task<bool> saveNewInferenceRule(InferenceRule rule)
+    {
+        return await this.databaseModel.saveNewInferenceRule(rule);
     }
 
-    public async Task<List<Rule>> saveUpdatedInferenceRule(InferenceRule rule)
+    public async Task<bool> saveNewEvaluationRule(EvaluationRule rule)
     {
-        // TODO: Attempt to persist to database and catch eventual errors
-        
-        Rule oldRule = this.inferenceRules.Find(x => x.id == rule.id);
-        this.inferenceRules.Remove(oldRule);
-
-        Rule parentRule = this.inferenceRules.Find(x => x.id == rule.parentId);
-        rule.parent = parentRule;
-        this.inferenceRules.Add(rule);
-
-        return this.inferenceRules;
+        return await this.databaseModel.saveNewEvaluationRule(rule);
     }
 
-
-    public async Task<List<Rule>> saveAddedEvaluationRule(EvaluationRule rule)
+    public async Task<bool> toggleActiveRule(Rule rule)
     {
-        // TODO: Attempt to persist to database and catch eventual errors
-        
-        Rule parentRule = this.evaluationRules.Find(x => x.id == rule.parentId);
-        rule.parent = parentRule;
-        this.evaluationRules.Add(rule);
-
-        return this.evaluationRules;
+        return await this.databaseModel.toggleActiveRule(rule);
     }
 
-    public async Task<List<Rule>> saveUpdatedEvaluationRule(EvaluationRule rule)
+    public async Task<bool> createNewTaxDeckaration(decimal income, decimal deductions, decimal taxDue, int year, int personId)
     {
-        // TODO: Attempt to persist to database and catch eventual errors
-
-        Rule oldRule = this.evaluationRules.Find(x => x.id == rule.id);
-        this.evaluationRules.Remove(oldRule);
-
-        Rule parentRule = this.evaluationRules.Find(x => x.id == rule.parentId);
-        rule.parent = parentRule;
-        this.evaluationRules.Add(rule);
-
-        return this.evaluationRules;
+        return await this.databaseModel.createNewTaxDeckaration(income, deductions, taxDue, year, personId);
     }
 
     public void teardown()

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GUI"
         mc:Ignorable="d"
-        Title="Kantonale Steuerverwaltungs-Software" Height="500" Width="1000">
+        Title="Kantonale Steuerverwaltungs-Software" Height="620" Width="1118">
     <Grid Margin="0,0,-138,-138">
         <Grid.RowDefinitions>
             <RowDefinition Height="405*"/>
@@ -42,38 +42,19 @@
             </Canvas>
         </GroupBox>
         <Button Content="Status reloaden" HorizontalAlignment="Left" Margin="24,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_1"/>
-        <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="769" Grid.ColumnSpan="2" Grid.RowSpan="2">
-            <TabItem Header="Natürliche Personen">
-                <ListView x:Name="personListView">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
-                            <GridViewColumn Header="Vorname" Width="100" DisplayMemberBinding="{Binding firstName}" />
-                            <GridViewColumn Header="Nachname" Width="100" DisplayMemberBinding="{Binding lastName}" />
-                            <GridViewColumn Header="Strasse" Width="100" DisplayMemberBinding="{Binding street.name}" />
-                            <GridViewColumn Header="Nr." Width="100" DisplayMemberBinding="{Binding streetNumber}" />
-                            <GridViewColumn Header="PLZ" Width="100" DisplayMemberBinding="{Binding street.postalCode}" />
-                            <GridViewColumn Header="Gemeinde" Width="100" DisplayMemberBinding="{Binding street.municipality.name}" />
-                        </GridView>
-                    </ListView.View>
-                    <ListView.ContextMenu>
-                        <ContextMenu>
-                            <MenuItem Header="Steuererklärung einreichen"
-                                Command="{Binding InsertTaxDeclaration}"
-                                CommandParameter="{Binding RelativeSource={RelativeSource AncestorType=ContextMenu}, Path=PlacementTarget.SelectedItem}" />
-                        </ContextMenu>
-                    </ListView.ContextMenu>
-                </ListView>
-            </TabItem>
+        <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="864" Grid.ColumnSpan="2">
             <TabItem Header="Steuererklärungen">
-                <ListView x:Name="taxDeclarationListView">
+                <ListView x:Name="taxDeclarationListView" Margin="0,0,-184,0">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
                             <GridViewColumn Header="Person" Width="100" DisplayMemberBinding="{Binding person.fullName}" />
-                            <GridViewColumn Header="Jahr" Width="100" DisplayMemberBinding="{Binding year}" />
-                            <GridViewColumn Header="Über Inferenzmotor durchgelaufen?" Width="200" DisplayMemberBinding="{Binding isInferred}" />
-                            <GridViewColumn Header="Über Steuerberechner durchgelaufen?" Width="200" DisplayMemberBinding="{Binding isCalculated}" />
+                            <GridViewColumn Header="Jahr" Width="50" DisplayMemberBinding="{Binding year}" />
+                            <GridViewColumn Header="Inferenzmotor?" Width="100" DisplayMemberBinding="{Binding isInferred}" />
+                            <GridViewColumn Header="Steuerberechner?" Width="100" DisplayMemberBinding="{Binding isCalculated}" />
+                            <GridViewColumn Header="Umsatz" Width="100" DisplayMemberBinding="{Binding Income}" />
+                            <GridViewColumn Header="Abzüge" Width="100" DisplayMemberBinding="{Binding Deductions}" />
+                            <GridViewColumn Header="Vermögen" Width="100" DisplayMemberBinding="{Binding TaxDue}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -96,38 +77,52 @@
                     <Label Content="Name" Grid.Column="1" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
                     <Label Content="Bedingung" Grid.Column="1" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
                     <Label Content="Transformation" Grid.Column="1" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="inferenceRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="127" Click="inferenceRuleSave_Click"/>
-                    <Button x:Name="inferenceRuleNew" Content="Neue Regel" Grid.Column="1" HorizontalAlignment="Left" Margin="274,363,0,0" VerticalAlignment="Top" Width="126" Click="inferenceRuleNew_Click"/>
+                    <Button x:Name="inferenceRuleToggleActive" Content="Deaktivieren" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="81" Click="inferenceRuleToggleActive_Click"/>
+                    <Button x:Name="inferenceRuleNew" Content="Neue Regel" Grid.Column="1" HorizontalAlignment="Left" Margin="231,363,0,0" VerticalAlignment="Top" Width="77" Click="inferenceRuleNew_Click"/>
+                    <Button x:Name="inferenceRuleNew_Save" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="323,363,0,0" VerticalAlignment="Top" Width="77" Click="inferenceRuleSave_Click"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Steuerberechnerregeln">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="2*" />
-                        <ColumnDefinition Width="3*"/>
+                        <ColumnDefinition Width="245*" />
+                        <ColumnDefinition Width="60*"/>
+                        <ColumnDefinition Width="458*"/>
                     </Grid.ColumnDefinitions>
 
-                    <TreeView x:Name="evaluationRulesView" Grid.Column="0" />
-                    <TextBox x:Name="evaluationRuleId" Grid.Column="1" HorizontalAlignment="Left" Margin="132,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
-                    <TextBox x:Name="evaluationRuleParent" Grid.Column="1" HorizontalAlignment="Left" Margin="132,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBox x:Name="evaluationRuleName" Grid.Column="1" HorizontalAlignment="Left" Margin="132,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    <TextBox x:Name="evaluationRuleCondition" Grid.Column="1" HorizontalAlignment="Left" Margin="132,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
-                    <TextBox x:Name="evaluationRuleTransformation" Grid.Column="1" HorizontalAlignment="Left" Margin="132,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
-                    <Label Content="ID" Grid.Column="1" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Parent" Grid.Column="1" HorizontalAlignment="Left" Margin="30,77,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Name" Grid.Column="1" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Bedingung" Grid.Column="1" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
-                    <Label Content="Transformation" Grid.Column="1" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
-                    <Button x:Name="evaluationRuleSave" Content="Speichern" Grid.Column="1" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="127" Click="evaluationRuleSave_Click"/>
-                    <Button x:Name="evaluationRuleNew" Content="Neue Regel" Grid.Column="1" HorizontalAlignment="Left" Margin="274,363,0,0" VerticalAlignment="Top" Width="126" Click="evaluationRuleNew_Click"/>
+                    <TreeView x:Name="evaluationRulesView" Grid.Column="0" Grid.ColumnSpan="2" />
+                    <TextBox x:Name="evaluationRuleId" Grid.Column="2" HorizontalAlignment="Left" Margin="132,40,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" IsEnabled="False"/>
+                    <TextBox x:Name="evaluationRuleParent" Grid.Column="2" HorizontalAlignment="Left" Margin="132,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="evaluationRuleName" Grid.Column="2" HorizontalAlignment="Left" Margin="132,123,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="evaluationRuleCondition" Grid.Column="2" HorizontalAlignment="Left" Margin="132,165,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
+                    <TextBox x:Name="evaluationRuleTransformation" Grid.Column="2" HorizontalAlignment="Left" Margin="132,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="268" Height="82"/>
+                    <Label Content="ID" Grid.Column="2" HorizontalAlignment="Left" Margin="30,36,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Parent" Grid.Column="2" HorizontalAlignment="Left" Margin="30,77,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Name" Grid.Column="2" HorizontalAlignment="Left" Margin="30,119,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Bedingung" Grid.Column="2" HorizontalAlignment="Left" Margin="30,163,0,0" VerticalAlignment="Top"/>
+                    <Label Content="Transformation" Grid.Column="2" HorizontalAlignment="Left" Margin="30,260,0,0" VerticalAlignment="Top"/>
+                    <Button x:Name="evaluationRuleToggleActive" Content="Deaktivieren" Grid.Column="2" HorizontalAlignment="Left" Margin="132,363,0,0" VerticalAlignment="Top" Width="81" Click="evaluationRuleToggleActive_Click"/>
+                    <Button x:Name="evaluationRuleNew" Content="Neue Regel" Grid.Column="2" HorizontalAlignment="Left" Margin="231,363,0,0" VerticalAlignment="Top" Width="77" Click="evaluationRuleNew_Click"/>
+                    <Button x:Name="evaluationRuleNew_Save" Content="Speichern" Grid.Column="2" HorizontalAlignment="Left" Margin="323,363,0,0" VerticalAlignment="Top" Width="77" Click="evaluationRuleSave_Click"/>
                 </Grid>
             </TabItem>
         </TabControl>
-        <GroupBox Header="System-Aktionen" Grid.ColumnSpan="2" Margin="10,197,0,0" HorizontalAlignment="Left" Width="197" Height="114" VerticalAlignment="Top">
+        <GroupBox Header="System-Aktionen" Grid.ColumnSpan="2" Margin="10,197,0,0" HorizontalAlignment="Left" Width="197" Height="126" VerticalAlignment="Top">
             <Canvas>
                 <Button Content="Inferenzregeln reloaden" Margin="0,229,492,0" Grid.ColumnSpan="2" Width="157" Click="Button_Click_2" Canvas.Left="15" Canvas.Top="-211"/>
                 <Button Content="Rechnungsregeln reloaden" Margin="0,264,491,0" Grid.ColumnSpan="2" Width="157" Click="Button_Click_3" Canvas.Left="15" Canvas.Top="-211"/>
             </Canvas>
         </GroupBox>
+        <GroupBox Header="Steuererklärung einreichen" Grid.ColumnSpan="2" Margin="10,328,0,0" HorizontalAlignment="Left" Width="197" Height="196" VerticalAlignment="Top" Grid.RowSpan="2">
+            <Canvas>
+                <Button x:Name="sendTaxDeclaration" Content="Einreichen" Canvas.Left="10" Canvas.Top="143" Width="165" Click="sendTaxDeclaration_Click"/>
+                <ComboBox x:Name="personComboBox" Canvas.Left="10" Canvas.Top="10" Width="165" DisplayMemberPath="fullName"/>
+                <TextBox x:Name="tdYear" Canvas.Left="10" Canvas.Top="43" Text="Jahr" TextWrapping="Wrap" Width="165"/>
+                <TextBox x:Name="tdIncome" Canvas.Left="10" Canvas.Top="69" Text="Umsatz" TextWrapping="Wrap" Width="165"/>
+                <TextBox x:Name="tdDeductions" Canvas.Left="10" Canvas.Top="92" Text="Abzüge" TextWrapping="Wrap" Width="165"/>
+                <TextBox x:Name="tdTaxDue" Canvas.Left="10" Canvas.Top="115" Text="Vermögen" TextWrapping="Wrap" Width="165"/>
+            </Canvas>
+        </GroupBox>
+        <Button x:Name="reloadTaxDeclarationBtn" Content="Steuererklärungen reloaden" HorizontalAlignment="Left" Margin="31,294,0,0" VerticalAlignment="Top" Width="159" Grid.ColumnSpan="2" Click="reloadTaxDeclarationBtn_Click"/>
     </Grid>
 </Window>

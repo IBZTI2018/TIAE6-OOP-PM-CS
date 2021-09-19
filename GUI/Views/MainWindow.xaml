@@ -47,15 +47,16 @@
                 <ListView x:Name="taxDeclarationListView" Margin="0,0,-184,0">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="ID" Width="100" DisplayMemberBinding="{Binding id}"/>
+                            <GridViewColumn Header="ID" Width="30" DisplayMemberBinding="{Binding id}"/>
                             <GridViewColumn Header="Person" Width="100" DisplayMemberBinding="{Binding person.fullName}" />
                             <GridViewColumn Header="Jahr" Width="50" DisplayMemberBinding="{Binding year}" />
                             <GridViewColumn Header="Inferenzmotor?" Width="100" DisplayMemberBinding="{Binding isInferred}" />
                             <GridViewColumn Header="Steuerberechner?" Width="100" DisplayMemberBinding="{Binding isCalculated}" />
                             <GridViewColumn Header="Einkommen" Width="100" DisplayMemberBinding="{Binding Income}" />
-                            <GridViewColumn Header="Abzüge" Width="100" DisplayMemberBinding="{Binding Deductions}" />
+                            <GridViewColumn Header="Abzüge" Width="70" DisplayMemberBinding="{Binding Deductions}" />
                             <GridViewColumn Header="Vermögen" Width="100" DisplayMemberBinding="{Binding Capital}" />
                             <GridViewColumn Header="Steuerbetrag" Width="100" DisplayMemberBinding="{Binding TaxDue}" />
+                            <GridViewColumn Header="Verdächtig" Width="100" DisplayMemberBinding="{Binding Suspicious}" />
                         </GridView>
                     </ListView.View>
                 </ListView>

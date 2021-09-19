@@ -163,6 +163,9 @@ namespace Shared.Models
         [NotMapped]
         [ProtoMember(11)]
         public decimal Capital { get; set; }
+        [NotMapped]
+        [ProtoMember(12)]
+        public bool Suspicious { get; set; }
 
         public bool getIsInferred()
         {

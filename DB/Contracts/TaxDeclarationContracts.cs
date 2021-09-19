@@ -91,6 +91,7 @@ namespace DB.Contracts
                     tdList[i].Deductions = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 2 && x.taxDeclarationId == tdList[i].id).value;
                     tdList[i].TaxDue = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 3 && x.taxDeclarationId == tdList[i].id).value;
                     tdList[i].Capital = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 7 && x.taxDeclarationId == tdList[i].id).value;
+                    tdList[i].Suspicious = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 6 && x.taxDeclarationId == tdList[i].id).value == 1;
                 }
 
                 TaxDeclarationListResponse response = new TaxDeclarationListResponse { 

@@ -93,7 +93,7 @@ namespace Shared.TreeTraversal {
             if (RuleParser.evaluateAsCondition(child.condition, data)) {
               if (child.transformation != null && child.transformation != "" && child.active)
               {
-                Console.WriteLine("  --> Performing Transformation: " + child.condition);
+                Console.WriteLine("  --> Performing Transformation: " + child.transformation);
                 data = RuleParser.evaluateAsTransformation(child.transformation, data);
               } 
 

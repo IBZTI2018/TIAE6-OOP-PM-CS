@@ -41,7 +41,7 @@
                 <Label Content="Steuerberechner" Canvas.Left="41" Canvas.Top="84"/>
             </Canvas>
         </GroupBox>
-        <Button Content="Status reloaden" HorizontalAlignment="Left" Margin="24,149,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_1"/>
+        <Button Content="Status reloaden" HorizontalAlignment="Left" Margin="32,152,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="157" Click="Button_Click_1"/>
         <TabControl Grid.Column="1" HorizontalAlignment="Left" Height="437" Margin="151,20,0,0" VerticalAlignment="Top" Width="864" Grid.ColumnSpan="2">
             <TabItem Header="Steuererklärungen">
                 <ListView x:Name="taxDeclarationListView" Margin="0,0,-184,0">

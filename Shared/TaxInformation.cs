@@ -1,6 +1,7 @@
 ﻿using ProtoBuf;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Shared.Structures
 {
@@ -62,7 +63,7 @@ namespace Shared.Structures
         // Tax information for the current year
         public YearlyTaxData thisYear;
 
-        public static TaxInformation fromVariableMap(Dictionary<string, object> input)
+        public static TaxInformation fromVariableMap(IEnumerable<KeyValuePair<string, object>> input)
         {
             TaxInformation t = new TaxInformation();
             if (t.lastYear == null)
@@ -75,17 +76,17 @@ namespace Shared.Structures
                 t.thisYear = new YearlyTaxData();
             }
 
-            t.lastYear.income = Convert.ToDecimal(input["vj_einkommen"]);
-            t.lastYear.capital = Convert.ToDecimal(input["vj_vermoegen"]);
-            t.lastYear.taxdue = Convert.ToDecimal(input["vj_steuersatz"]);
-            t.thisYear.income = Convert.ToDecimal(input["vj_einkommen"]);
-            t.thisYear.capital = Convert.ToDecimal(input["vj_vermoegen"]);
-            t.thisYear.taxdue = Convert.ToDecimal(input["vj_steuersatz"]);
+            t.lastYear.income = Convert.ToDecimal(input.Where(x => x.Key == "vj_einkommen").First().Value);
+            t.lastYear.capital = Convert.ToDecimal(input.Where(x => x.Key == "vj_vermoegen").First().Value);
+            t.lastYear.taxdue = Convert.ToDecimal(input.Where(x => x.Key == "vj_steuersatz").First().Value);
+            t.thisYear.income = Convert.ToDecimal(input.Where(x => x.Key == "lj_einkommen").First().Value);
+            t.thisYear.capital = Convert.ToDecimal(input.Where(x => x.Key == "lj_vermoegen").First().Value);
+            t.thisYear.taxdue = Convert.ToDecimal(input.Where(x => x.Key == "lj_steuersatz").First().Value);
 
-            t.lastYear.inferred = Convert.ToBoolean(input["vj_inferiert"]);
-            t.lastYear.flagged = Convert.ToBoolean(input["vj_warnung"]);
-            t.thisYear.inferred = Convert.ToBoolean(input["lj_inferiert"]);
-            t.thisYear.flagged = Convert.ToBoolean(input["lj_warnung"]);
+            t.lastYear.inferred = Convert.ToBoolean(input.Where(x => x.Key == "vj_inferiert").First().Value);
+            t.lastYear.flagged = Convert.ToBoolean(input.Where(x => x.Key == "vj_warnung").First().Value);
+            t.thisYear.inferred = Convert.ToBoolean(input.Where(x => x.Key == "lj_inferiert").First().Value);
+            t.thisYear.flagged = Convert.ToBoolean(input.Where(x => x.Key == "lj_warnung").First().Value);
 
             return t;
         }

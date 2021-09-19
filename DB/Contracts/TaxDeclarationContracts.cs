@@ -48,6 +48,13 @@ namespace DB.Contracts
                         calculated.value = 0;
                         ctx.taxDeclarationEntries.Add(calculated);
 
+
+                        TaxDeclarationEntry taxDue = new TaxDeclarationEntry();
+                        taxDue.taxDeclarationId = td.id;
+                        taxDue.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "TaxDue").FirstOrDefault();
+                        taxDue.value = 0;
+                        ctx.taxDeclarationEntries.Add(taxDue);
+
                         TaxDeclarationEntry suspicious = new TaxDeclarationEntry();
                         suspicious.taxDeclarationId = td.id;
                         suspicious.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "Suspicious").FirstOrDefault();
@@ -55,9 +62,9 @@ namespace DB.Contracts
                         ctx.taxDeclarationEntries.Add(suspicious);
 
                         TaxDeclarationEntry capital = new TaxDeclarationEntry();
-                        suspicious.taxDeclarationId = td.id;
-                        suspicious.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "Capital").FirstOrDefault();
-                        suspicious.value = 0;
+                        capital.taxDeclarationId = td.id;
+                        capital.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "Capital").FirstOrDefault();
+                        capital.value = 0;
                         ctx.taxDeclarationEntries.Add(capital);
 
                         ctx.SaveChanges();

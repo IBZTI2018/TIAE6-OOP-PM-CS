@@ -78,9 +78,11 @@ namespace Shared.Structures
 
             t.lastYear.income = Convert.ToDecimal(input.Where(x => x.Key == "vj_einkommen").First().Value);
             t.lastYear.capital = Convert.ToDecimal(input.Where(x => x.Key == "vj_vermoegen").First().Value);
+            t.lastYear.deductions = Convert.ToDecimal(input.Where(x => x.Key == "vj_abzuege").First().Value);
             t.lastYear.taxdue = Convert.ToDecimal(input.Where(x => x.Key == "vj_steuersatz").First().Value);
             t.thisYear.income = Convert.ToDecimal(input.Where(x => x.Key == "lj_einkommen").First().Value);
             t.thisYear.capital = Convert.ToDecimal(input.Where(x => x.Key == "lj_vermoegen").First().Value);
+            t.thisYear.deductions = Convert.ToDecimal(input.Where(x => x.Key == "lj_abzuege").First().Value);
             t.thisYear.taxdue = Convert.ToDecimal(input.Where(x => x.Key == "lj_steuersatz").First().Value);
 
             t.lastYear.inferred = Convert.ToBoolean(input.Where(x => x.Key == "vj_inferiert").First().Value);
@@ -104,6 +106,9 @@ namespace Shared.Structures
                   "vj_vermoegen",
                   Convert.ToDouble(this.lastYear.capital)
                 }, {
+                  "vj_abzuege",
+                  Convert.ToDouble(this.lastYear.deductions)
+                }, {
                   "vj_steuersatz",
                   Convert.ToDouble(this.lastYear.taxdue)
                 }, {
@@ -112,6 +117,9 @@ namespace Shared.Structures
                 }, {
                   "lj_vermoegen",
                   Convert.ToDouble(this.thisYear.capital)
+                }, {
+                  "lj_abzuege",
+                  Convert.ToDouble(this.thisYear.deductions)
                 }, {
                   "lj_steuersatz",
                   Convert.ToDouble(this.thisYear.taxdue)

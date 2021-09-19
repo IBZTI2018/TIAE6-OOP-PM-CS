@@ -17,9 +17,15 @@ namespace GUI.Models {
 
     public async Task<bool> serviceIsRunning()
     {
-      IStatusService statusService = this.channel.CreateGrpcService<IStatusService>();
-      StatusResponse response = await statusService.getStatus(new StatusRequest { ping = 1 });
-      return response.pong == 1;
+        try
+        {
+            IStatusService statusService = this.channel.CreateGrpcService<IStatusService>();
+            StatusResponse response = await statusService.getStatus(new StatusRequest { ping = 1 });
+            return response.pong == 1;
+        } catch
+        {
+            return false;
+        }
     }
 
     public async Task reloadRules()

@@ -351,7 +351,7 @@ namespace GUI
 
             if (!decimal.TryParse(tdIncome.Text, out income))
             {
-                Dispatcher.Invoke(() => MessageBox.Show("Umsatz ist keine gültige Zahl"));
+                Dispatcher.Invoke(() => MessageBox.Show("Einkommen ist keine gültige Zahl"));
                 return;
             }
 

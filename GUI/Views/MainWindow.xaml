@@ -52,7 +52,7 @@
                             <GridViewColumn Header="Jahr" Width="50" DisplayMemberBinding="{Binding year}" />
                             <GridViewColumn Header="Inferenzmotor?" Width="100" DisplayMemberBinding="{Binding isInferred}" />
                             <GridViewColumn Header="Steuerberechner?" Width="100" DisplayMemberBinding="{Binding isCalculated}" />
-                            <GridViewColumn Header="Umsatz" Width="100" DisplayMemberBinding="{Binding Income}" />
+                            <GridViewColumn Header="Einkommen" Width="100" DisplayMemberBinding="{Binding Income}" />
                             <GridViewColumn Header="Abzüge" Width="100" DisplayMemberBinding="{Binding Deductions}" />
                             <GridViewColumn Header="Vermögen" Width="100" DisplayMemberBinding="{Binding Capital}" />
                             <GridViewColumn Header="Steuerbetrag" Width="100" DisplayMemberBinding="{Binding TaxDue}" />
@@ -108,7 +108,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <GroupBox Header="System-Aktionen" Grid.ColumnSpan="2" Margin="10,197,0,0" HorizontalAlignment="Left" Width="197" Height="126" VerticalAlignment="Top">
+        <GroupBox Header="System-Aktionen" Grid.ColumnSpan="2" Margin="10,190,0,0" HorizontalAlignment="Left" Width="197" Height="132" VerticalAlignment="Top">
             <Canvas>
                 <Button Content="Inferenzregeln reloaden" Margin="0,229,492,0" Grid.ColumnSpan="2" Width="157" Click="Button_Click_2" Canvas.Left="15" Canvas.Top="-211"/>
                 <Button Content="Rechnungsregeln reloaden" Margin="0,264,491,0" Grid.ColumnSpan="2" Width="157" Click="Button_Click_3" Canvas.Left="15" Canvas.Top="-211"/>
@@ -119,7 +119,7 @@
                 <Button x:Name="sendTaxDeclaration" Content="Einreichen" Canvas.Left="10" Canvas.Top="143" Width="165" Click="sendTaxDeclaration_Click"/>
                 <ComboBox x:Name="personComboBox" Canvas.Left="10" Canvas.Top="10" Width="165" DisplayMemberPath="fullName"/>
                 <TextBox x:Name="tdYear" Canvas.Left="10" Canvas.Top="43" Text="Jahr" TextWrapping="Wrap" Width="165"/>
-                <TextBox x:Name="tdIncome" Canvas.Left="10" Canvas.Top="69" Text="Umsatz" TextWrapping="Wrap" Width="165"/>
+                <TextBox x:Name="tdIncome" Canvas.Left="10" Canvas.Top="69" Text="Einkommen" TextWrapping="Wrap" Width="165"/>
                 <TextBox x:Name="tdDeductions" Canvas.Left="10" Canvas.Top="92" Text="Abzüge" TextWrapping="Wrap" Width="165"/>
                 <TextBox x:Name="tdCapital" Canvas.Left="10" Canvas.Top="115" Text="Vermögen" TextWrapping="Wrap" Width="165"/>
             </Canvas>

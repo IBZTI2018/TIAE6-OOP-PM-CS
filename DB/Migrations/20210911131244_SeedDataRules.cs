@@ -15,7 +15,7 @@ namespace DB.Migrations
               values: new object[,]
               {
                   { 1, null, "InferenceRule", "Inferenz-Root", this.fakeDate, this.fakeDate, "true", "" },
-                  { 2, 1, "InferenceRule", "Inferenz-Vermoegen", this.fakeDate, this.fakeDate, "lj_vermoegen == null || lj_vermoegen == 0", "lj_vermoegen = lj_einkommen * 0.75" },
+                  { 2, 1, "InferenceRule", "Fall 5", this.fakeDate, this.fakeDate, "lj_vermoegen == null || lj_vermoegen == 0", "lj_vermoegen = lj_einkommen * 0.75" },
 
                   { 3, null, "EvaluationRule", "Evaluation-Root", this.fakeDate, this.fakeDate, "true", "" },
                   { 4, 3, "EvaluationRule", "Fall 4", this.fakeDate, this.fakeDate, "vj_einkommen > (1.5* lj_einkommen) && vj_einkommen > 100000", "lj_flagged = true" },

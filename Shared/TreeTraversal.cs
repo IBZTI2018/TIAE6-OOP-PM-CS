@@ -59,6 +59,7 @@ namespace Shared.TreeTraversal {
         // First, we find the root node by finding the rule without a parent
         Rule? rootNode = null;
         Rule currentNode = null;
+        Rule nextNode = null;
         List<Rule> children = new List<Rule>();
 
         foreach (var rule in rules)
@@ -82,6 +83,7 @@ namespace Shared.TreeTraversal {
 
           // Get all children for the current rule node
           children = rules.FindAll((rule) => rule.parent != null && rule.parent.id == currentNode.id);
+          nextNode = null;
 
           foreach (var child in children)
           {
@@ -95,18 +97,20 @@ namespace Shared.TreeTraversal {
                 data = RuleParser.evaluateAsTransformation(child.transformation, data);
               } 
 
-              currentNode = child;
+              nextNode = child;
               break;
             }
           }
 
           // If no condition matched, we also stop. 
           // TODO: Talk with customer what to do in this case!
-          if (children.Count > 0)
+          if (children.Count > 0 && nextNode == null)
           {
             Console.WriteLine("  -> Had " + children.Count + " children but none matched. Returnung data.");
             return data;
           }
+
+          currentNode = nextNode;
         } while (children.Count > 0);
 
         Console.WriteLine("  -> Reached leaf node on tree. Returning final data.");

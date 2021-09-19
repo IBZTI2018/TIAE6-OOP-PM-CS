@@ -10,7 +10,7 @@ namespace DB.Contracts
 {
     public class TaxDeclarationService : ITaxDeclarationService
     {
-        public ValueTask<BoolResponse> createNewTaxDeckaration(NewTaxDeclarationRequest request)
+        public ValueTask<BoolResponse> createNewTaxDeclaration(NewTaxDeclarationRequest request)
         {
             using (var ctx = new TIAE6Context())
             {
@@ -36,12 +36,6 @@ namespace DB.Contracts
                         deductions.value = request.deductions;
                         ctx.taxDeclarationEntries.Add(deductions);
 
-                        TaxDeclarationEntry taxDue = new TaxDeclarationEntry();
-                        taxDue.taxDeclarationId = td.id;
-                        taxDue.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "TaxDue").FirstOrDefault();
-                        taxDue.value = request.deductions;
-                        ctx.taxDeclarationEntries.Add(taxDue);
-
                         TaxDeclarationEntry inferred = new TaxDeclarationEntry();
                         inferred.taxDeclarationId = td.id;
                         inferred.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "Inferred").FirstOrDefault();
@@ -59,6 +53,12 @@ namespace DB.Contracts
                         suspicious.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "Suspicious").FirstOrDefault();
                         suspicious.value = 0;
                         ctx.taxDeclarationEntries.Add(suspicious);
+
+                        TaxDeclarationEntry capital = new TaxDeclarationEntry();
+                        suspicious.taxDeclarationId = td.id;
+                        suspicious.attribute = ctx.taxDeclarationAttributes.Where(x => x.name == "Capital").FirstOrDefault();
+                        suspicious.value = 0;
+                        ctx.taxDeclarationEntries.Add(capital);
 
                         ctx.SaveChanges();
                         txn.Commit();
@@ -90,6 +90,7 @@ namespace DB.Contracts
                     tdList[i].Income = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 1 && x.taxDeclarationId == tdList[i].id).value;
                     tdList[i].Deductions = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 2 && x.taxDeclarationId == tdList[i].id).value;
                     tdList[i].TaxDue = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 3 && x.taxDeclarationId == tdList[i].id).value;
+                    tdList[i].Capital = ctx.taxDeclarationEntries.Single(x => x.taxDeclarationAttributeId == 7 && x.taxDeclarationId == tdList[i].id).value;
                 }
 
                 TaxDeclarationListResponse response = new TaxDeclarationListResponse { 

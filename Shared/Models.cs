@@ -160,6 +160,9 @@ namespace Shared.Models
         [NotMapped]
         [ProtoMember(10)]
         public decimal TaxDue { get; set; }
+        [NotMapped]
+        [ProtoMember(11)]
+        public decimal Capital { get; set; }
 
         public bool getIsInferred()
         {

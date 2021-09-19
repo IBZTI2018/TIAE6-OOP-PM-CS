@@ -88,9 +88,9 @@ namespace GUI.Controllers {
         return await this.databaseModel.toggleActiveRule(rule);
     }
 
-    public async Task<bool> createNewTaxDeckaration(decimal income, decimal deductions, decimal taxDue, int year, int personId)
+    public async Task<bool> createNewTaxDeclaration(decimal income, decimal deductions, int year, int personId, decimal capital)
     {
-        return await this.databaseModel.createNewTaxDeckaration(income, deductions, taxDue, year, personId);
+        return await this.databaseModel.createNewTaxDeclaration(income, deductions, year, personId, capital);
     }
 
     public void teardown()

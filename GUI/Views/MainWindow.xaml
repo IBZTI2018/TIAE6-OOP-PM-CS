@@ -54,7 +54,8 @@
                             <GridViewColumn Header="Steuerberechner?" Width="100" DisplayMemberBinding="{Binding isCalculated}" />
                             <GridViewColumn Header="Umsatz" Width="100" DisplayMemberBinding="{Binding Income}" />
                             <GridViewColumn Header="Abzüge" Width="100" DisplayMemberBinding="{Binding Deductions}" />
-                            <GridViewColumn Header="Vermögen" Width="100" DisplayMemberBinding="{Binding TaxDue}" />
+                            <GridViewColumn Header="Vermögen" Width="100" DisplayMemberBinding="{Binding Capital}" />
+                            <GridViewColumn Header="Steuerbetrag" Width="100" DisplayMemberBinding="{Binding TaxDue}" />
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -120,7 +121,7 @@
                 <TextBox x:Name="tdYear" Canvas.Left="10" Canvas.Top="43" Text="Jahr" TextWrapping="Wrap" Width="165"/>
                 <TextBox x:Name="tdIncome" Canvas.Left="10" Canvas.Top="69" Text="Umsatz" TextWrapping="Wrap" Width="165"/>
                 <TextBox x:Name="tdDeductions" Canvas.Left="10" Canvas.Top="92" Text="Abzüge" TextWrapping="Wrap" Width="165"/>
-                <TextBox x:Name="tdTaxDue" Canvas.Left="10" Canvas.Top="115" Text="Vermögen" TextWrapping="Wrap" Width="165"/>
+                <TextBox x:Name="tdCapital" Canvas.Left="10" Canvas.Top="115" Text="Vermögen" TextWrapping="Wrap" Width="165"/>
             </Canvas>
         </GroupBox>
         <Button x:Name="reloadTaxDeclarationBtn" Content="Steuererklärungen reloaden" HorizontalAlignment="Left" Margin="31,294,0,0" VerticalAlignment="Top" Width="159" Grid.ColumnSpan="2" Click="reloadTaxDeclarationBtn_Click"/>

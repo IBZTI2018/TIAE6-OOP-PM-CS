@@ -46,7 +46,12 @@ namespace DB.Contracts
 
                 if (entry.attribute.name == "Suspicious")
                 {
-                  taxData.flagged = entry.value == 1;
+                    taxData.flagged = entry.value == 1;
+                }
+
+                if (entry.attribute.name == "Capital")
+                {
+                    taxData.capital = entry.value;
                 }
             }
             return taxData;
@@ -165,6 +170,11 @@ namespace DB.Contracts
                     if (entry.attribute.name == "Suspicious")
                     {
                         entry.value = taxData.flagged ? 1 : 0;
+                    }
+
+                    if (entry.attribute.name == "Capital")
+                    {
+                        entry.value = taxData.capital;
                     }
                 }
 

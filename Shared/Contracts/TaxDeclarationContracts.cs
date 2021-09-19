@@ -20,9 +20,9 @@ namespace Shared.Contracts
         [DataMember(Order = 2)]
         public decimal deductions { get; set; }
         [DataMember(Order = 3)]
-        public decimal taxDue { get; set; }
-        [DataMember(Order = 4)]
         public int year { get; set; }
+        [DataMember(Order = 4)]
+        public decimal capital { get; set; }
         [DataMember(Order = 5)]
         public int personId { get; set; }
     }
@@ -31,6 +31,6 @@ namespace Shared.Contracts
     public interface ITaxDeclarationService
     {
         public ValueTask<TaxDeclarationListResponse> getAllTaxDeclarations(EmptyRequest request);
-        public ValueTask<BoolResponse> createNewTaxDeckaration(NewTaxDeclarationRequest request);
+        public ValueTask<BoolResponse> createNewTaxDeclaration(NewTaxDeclarationRequest request);
     }
 }

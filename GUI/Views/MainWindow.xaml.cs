@@ -346,7 +346,7 @@ namespace GUI
 
         private async void sendTaxDeclaration_Click(object sender, RoutedEventArgs e)
         {
-            decimal income, deductions, taxDue;
+            decimal income, deductions, taxDue, capital;
             int year, personId = 0;
 
             if (!decimal.TryParse(tdIncome.Text, out income))
@@ -367,7 +367,7 @@ namespace GUI
                 return;
             }
 
-            if (!decimal.TryParse(tdTaxDue.Text, out taxDue))
+            if (!decimal.TryParse(tdCapital.Text, out capital))
             {
                 Dispatcher.Invoke(() => MessageBox.Show("Vermögen ist keine gültige Zahl"));
                 return;
@@ -379,7 +379,7 @@ namespace GUI
                 personId = person.id;
             }
 
-            bool response = await this.windowController.createNewTaxDeckaration(income, deductions, taxDue, year, personId);
+            bool response = await this.windowController.createNewTaxDeclaration(income, deductions, year, personId, capital);
 
             if (response)
             {

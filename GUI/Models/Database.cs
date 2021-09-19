@@ -78,15 +78,15 @@ namespace GUI.Models {
         return response.success;
     }
 
-    public async Task<bool> createNewTaxDeckaration(decimal argIncome, decimal argDeductions, decimal argTaxDue, int argYear, int argPersonId)
+    public async Task<bool> createNewTaxDeclaration(decimal argIncome, decimal argDeductions, int argYear, int argPersonId, decimal argCapital)
     {
         ITaxDeclarationService taxDeclarationService = this.channel.CreateGrpcService<ITaxDeclarationService>();
-        BoolResponse response = await taxDeclarationService.createNewTaxDeckaration(new NewTaxDeclarationRequest {
+        BoolResponse response = await taxDeclarationService.createNewTaxDeclaration(new NewTaxDeclarationRequest {
             income = argIncome,
             deductions = argDeductions,
-            taxDue = argTaxDue,
             year = argYear,
-            personId = argPersonId
+            personId = argPersonId,
+            capital = argCapital
         });
         return response.success;
     }

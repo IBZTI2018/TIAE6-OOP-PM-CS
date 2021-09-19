@@ -101,7 +101,7 @@ namespace Shared.Structures
             return new Dictionary<string, object>() {
                 {
                   "vj_einkommen",
-                  Convert.ToDouble(this.lastYear.taxable)
+                  Convert.ToDouble(this.lastYear.income)
                 }, {
                   "vj_vermoegen",
                   Convert.ToDouble(this.lastYear.capital)
@@ -113,7 +113,7 @@ namespace Shared.Structures
                   Convert.ToDouble(this.lastYear.taxdue)
                 }, {
                   "lj_einkommen",
-                  Convert.ToDouble(this.thisYear.taxable)
+                  Convert.ToDouble(this.thisYear.income)
                 }, {
                   "lj_vermoegen",
                   Convert.ToDouble(this.thisYear.capital)

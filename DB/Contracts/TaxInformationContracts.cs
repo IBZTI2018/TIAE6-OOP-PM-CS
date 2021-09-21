@@ -73,7 +73,18 @@ namespace DB.Contracts
             TaxDeclaration thisYearDeclaration = null;
             using (var ctx = new TIAE6Context())
             {
-                var entry = ctx.taxDeclarationEntries.Include(x => x.taxDeclaration).FirstOrDefault(x => (x.taxDeclarationAttributeId == 4 && x.value == 0) || (x.taxDeclarationAttributeId == 5 && x.value == 0));
+                TaxDeclarationEntry entry = null;
+
+                if (checkInferred && !checkCalculated)
+                {
+                    entry = ctx.taxDeclarationEntries.Include(x => x.taxDeclaration).FirstOrDefault(x => (x.taxDeclarationAttributeId == 4 && x.value == 0));
+                }
+
+                if (!checkInferred && checkCalculated)
+                {
+                    entry = ctx.taxDeclarationEntries.Include(x => x.taxDeclaration).FirstOrDefault(x => (x.taxDeclarationAttributeId == 5 && x.value == 0));
+                }
+
                 if (entry != null)
                 {
                     thisYearDeclaration = ctx.taxDeclarations.Include("Entries").Include("Entries.attribute").FirstOrDefault(x => x.id == entry.taxDeclaration.id);

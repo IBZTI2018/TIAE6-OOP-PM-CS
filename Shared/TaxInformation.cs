@@ -118,6 +118,9 @@ namespace Shared.Structures
                   "vj_einkommen",
                   Convert.ToDouble(this.lastYear.income)
                 }, {
+                  "vj_einkommen_rein",
+                  Convert.ToDouble(this.lastYear.taxable)
+                }, {
                   "vj_vermoegen",
                   Convert.ToDouble(this.lastYear.capital)
                 }, {
@@ -129,6 +132,9 @@ namespace Shared.Structures
                 }, {
                   "lj_einkommen",
                   Convert.ToDouble(this.thisYear.income)
+                }, {
+                  "lj_einkommen_rein",
+                  Convert.ToDouble(this.thisYear.taxable)
                 }, {
                   "lj_vermoegen",
                   Convert.ToDouble(this.thisYear.capital)

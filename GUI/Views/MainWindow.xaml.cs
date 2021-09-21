@@ -3,14 +3,11 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using ProtoBuf.Grpc.Client;
-using Grpc.Net.Client;
-using Shared.Contracts;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Collections.Generic;
 using Shared.Models;
 using GUI.Controllers;
-using System.Linq;
 
 namespace GUI
 {
@@ -18,12 +15,14 @@ namespace GUI
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     /// 
-
     public partial class MainWindow : Window {
         private MainWindowController windowController;
         private InferenceRule currentInferenceRule;
         private EvaluationRule currentEvaluationRule;
 
+        /// <summary>
+        /// Check the status of all linked systems
+        /// </summary>
         public async void checkSystemStatus()
         {
             var statuses = await this.windowController.getServiceStatus();
@@ -46,7 +45,11 @@ namespace GUI
             }
         }
 
-        public async Task buildTreeViews()
+        /// <summary>
+        /// Build the tree views for displaying rules
+        /// </summary>
+        /// <returns>An awaitabl task</returns>
+        public async void buildTreeViews()
         {
             List<Rule> inferrenceRules = await this.windowController.getAllInferrenceRules();
             List<Rule> evaluationRules = await this.windowController.getAllEvaluationRules();
@@ -55,6 +58,9 @@ namespace GUI
             this.buildTreeView(this.evaluationRulesView, evaluationRules);
         }
     
+        /// <summary>
+        /// Load all persons from the database
+        /// </summary>
         private async void loadPersons()
         {
             List<Person> persons = await this.windowController.getAllPersons();
@@ -67,6 +73,9 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// Load all tax declarations from the database
+        /// </summary>
         private async void loadTaxDeclarations()
         {
             List<TaxDeclaration> declarations = await this.windowController.getAllTaxDeclarations();
@@ -79,6 +88,11 @@ namespace GUI
             }
         }
     
+        /// <summary>
+        /// Build a tree view for a set of rules
+        /// </summary>
+        /// <param name="tree">The output tree view</param>
+        /// <param name="rules">The list of rules to display</param>
         private void buildTreeView(TreeView tree, List<Rule> rules)
         {
             tree.Items.Clear();
@@ -115,6 +129,10 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// Add event handler to an inference tree node
+        /// </summary>
+        /// <param name="item">The tree view item to add to</param>
         public void addInferrenceItemSelectHandler(TreeViewItem item)
         {
             item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
@@ -147,6 +165,10 @@ namespace GUI
             });
         }
 
+        /// <summary>
+        /// Add event handler to an evaluation tree node
+        /// </summary>
+        /// <param name="item">The tree view item to add to</param>
         public void addEvaluatorItemSelectHandler(TreeViewItem item)
         {
             item.Selected += new RoutedEventHandler(delegate (Object o, RoutedEventArgs e)
@@ -198,6 +220,11 @@ namespace GUI
             this.windowController = null;
         }
 
+        /// <summary>
+        /// When clicking reload status button
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             this.checkSystemStatus();
@@ -205,6 +232,11 @@ namespace GUI
             this.loadTaxDeclarations();
         }
 
+        /// <summary>
+        /// When clicking reload rules for inference
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private async void Button_Click_2(object sender, RoutedEventArgs e)
         {
             try
@@ -217,6 +249,11 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// When clicking reload rules for evaluation
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private async void Button_Click_3(object sender, RoutedEventArgs e)
         {
             try
@@ -230,6 +267,11 @@ namespace GUI
             }
         }
 
+        /// <summary>
+        /// When clicking the save button for an inference rule
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private async void inferenceRuleSave_Click(object sender, RoutedEventArgs e)
         {
             bool isNewRule = false;
@@ -243,9 +285,14 @@ namespace GUI
             updatedRule.transformation = this.inferenceRuleTransformation.Text;
 
             await this.windowController.saveNewInferenceRule(updatedRule);
-            await this.buildTreeViews();
+            this.buildTreeViews();
         }
-
+    
+        /// <summary>
+        /// When clicking the save button for an evaluation rule
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private async void evaluationRuleSave_Click(object sender, RoutedEventArgs e)
         {
             bool isNewRule = false;
@@ -259,9 +306,14 @@ namespace GUI
             updatedRule.transformation = this.evaluationRuleTransformation.Text;
 
             await this .windowController.saveNewEvaluationRule(updatedRule);
-            await this.buildTreeViews();
+            this.buildTreeViews();
         }
-
+    
+        /// <summary>
+        /// When clicking the new button for an inference rule
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private void inferenceRuleNew_Click(object sender, RoutedEventArgs e)
         {
             TreeViewItem root = null;
@@ -278,7 +330,12 @@ namespace GUI
             this.inferenceRuleCondition.Text = "";
             this.inferenceRuleTransformation.Text = "";
         }
-
+    
+        /// <summary>
+        /// When clicking the new button for an evaluation rule
+        /// </summary>
+        /// <param name="sender">sender object</param>
+        /// <param name="e">event object</param>
         private void evaluationRuleNew_Click(object sender, RoutedEventArgs e)
         {
             TreeViewItem root = null;

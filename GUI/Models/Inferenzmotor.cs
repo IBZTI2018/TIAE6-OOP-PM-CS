@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ProtoBuf.Grpc.Client;
+﻿using ProtoBuf.Grpc.Client;
 using Grpc.Net.Client;
 using Shared.Contracts;
 using System.Threading.Tasks;
@@ -15,6 +12,10 @@ namespace GUI.Models {
       this.channel = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.INFERENCE_PORT);
     }
 
+    /// <summary>
+    /// Check whether or not the service is running.
+    /// </summary>
+    /// <returns>A boolean indicator of wheter or not the service is running</returns>
     public async Task<bool> serviceIsRunning()
     {
         try
@@ -28,6 +29,10 @@ namespace GUI.Models {
         }
     }
 
+    /// <summary>
+    /// Reload the rules that the inference worker is using
+    /// </summary>
+    /// <returns>An awaitable task</returns>
     public async Task reloadRules()
     {
       IInferenceService service = this.channel.CreateGrpcService<IInferenceService>();

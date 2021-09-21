@@ -24,7 +24,22 @@ namespace Steuerberechner {
     public static async void worker()
     {
       // Load all rules on startup
-      await Steuerberechner.shared.loadRulesFromDatabase();
+      bool canStart;
+
+      do
+      {
+        try
+        {
+          await Steuerberechner.shared.loadRulesFromDatabase();
+          canStart = true;
+        }
+        catch
+        {
+          Console.WriteLine("Failed to load rules, retrying...");
+          canStart = false;
+        }
+        Thread.Sleep(5000);
+      } while (!canStart);
 
       while (true)
       {

@@ -51,11 +51,16 @@ namespace GUI
         /// <returns>An awaitabl task</returns>
         public async void buildTreeViews()
         {
-            List<Rule> inferrenceRules = await this.windowController.getAllInferrenceRules();
-            List<Rule> evaluationRules = await this.windowController.getAllEvaluationRules();
+            try
+            {
+                List<Rule> inferrenceRules = await this.windowController.getAllInferrenceRules();
+                List<Rule> evaluationRules = await this.windowController.getAllEvaluationRules();
 
-            this.buildTreeView(this.inferenceRulesView, inferrenceRules);
-            this.buildTreeView(this.evaluationRulesView, evaluationRules);
+                this.buildTreeView(this.inferenceRulesView, inferrenceRules);
+                this.buildTreeView(this.evaluationRulesView, evaluationRules);
+            } catch {
+                MessageBox.Show("Fehler beim Laden der Regeldaten aus der Datenbank.");
+            }
         }
     
         /// <summary>
@@ -63,13 +68,19 @@ namespace GUI
         /// </summary>
         private async void loadPersons()
         {
-            List<Person> persons = await this.windowController.getAllPersons();
-            this.personComboBox.Items.Clear();
-            foreach (Person person in persons)
+            try
             {
-                Dispatcher.Invoke(() => {
-                    this.personComboBox.Items.Add(person);
-                });
+                List<Person> persons = await this.windowController.getAllPersons();
+                this.personComboBox.Items.Clear();
+                foreach (Person person in persons)
+                {
+                    Dispatcher.Invoke(() => {
+                        this.personComboBox.Items.Add(person);
+                    });
+                }
+            } catch
+            {
+                MessageBox.Show("Fehler beim Laden der Personendaten aus der Datenbank");
             }
         }
 
@@ -78,13 +89,19 @@ namespace GUI
         /// </summary>
         private async void loadTaxDeclarations()
         {
-            List<TaxDeclaration> declarations = await this.windowController.getAllTaxDeclarations();
-            this.taxDeclarationListView.Items.Clear();
-            foreach (TaxDeclaration declaration in declarations)
+            try
             {
-                Dispatcher.Invoke(() => {
-                    this.taxDeclarationListView.Items.Add(declaration);
-                });
+                List<TaxDeclaration> declarations = await this.windowController.getAllTaxDeclarations();
+                this.taxDeclarationListView.Items.Clear();
+                foreach (TaxDeclaration declaration in declarations)
+                {
+                    Dispatcher.Invoke(() => {
+                        this.taxDeclarationListView.Items.Add(declaration);
+                    });
+                }
+            } catch
+            {
+                MessageBox.Show("Fehler beim Laden der Steuererklärungen aus der Datenbank");
             }
         }
     
@@ -436,7 +453,14 @@ namespace GUI
                 personId = person.id;
             }
 
-            bool response = await this.windowController.createNewTaxDeclaration(income, deductions, year, personId, capital);
+            bool response;
+            try
+            {
+              response = await this.windowController.createNewTaxDeclaration(income, deductions, year, personId, capital);
+            } catch
+            {
+              response = false;
+            }
 
             if (response)
             {

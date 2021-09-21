@@ -45,12 +45,19 @@ namespace Inferenzmotor {
       {
         // Attempt to load a dataset from the database
         Console.WriteLine("Fetching new data from database...");
-        TaxInformation newInformation;
-        using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
+        TaxInformation newInformation = null;
+
+        try
         {
-          ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
-          TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
-          newInformation = response.taxInformation;
+          using (var http = GrpcChannel.ForAddress(Shared.Network.BASE_HOST + Shared.Network.DB_PORT))
+          {
+            ITaxInformationService taxInformationService = http.CreateGrpcService<ITaxInformationService>();
+            TaxInformationResponse response = await taxInformationService.getNonInferredWork(new EmptyRequest());
+            newInformation = response.taxInformation;
+          }
+        } catch
+        {
+          Console.WriteLine("Failed to fetch data from database");
         }
 
         // If no new information is found, we just wait a bit and try again

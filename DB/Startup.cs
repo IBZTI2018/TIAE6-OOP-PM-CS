@@ -7,6 +7,9 @@ using Shared.Contracts;
 
 namespace DB
 {
+    /// <summary>
+    /// Startup behaviour for the database node
+    /// </summary>
     public class Startup
     {
         // This method gets called by the runtime. Use this method to add services to the container.

@@ -16,6 +16,7 @@ namespace DB
         public DbSet<TaxDeclaration> taxDeclarations { get; set; }
         public DbSet<TaxDeclarationAttribute> taxDeclarationAttributes { get; set; }
         public DbSet<TaxDeclarationEntry> taxDeclarationEntries { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             var builder = new ConfigurationBuilder().AddJsonFile($"appsettings.json", true, true);
@@ -47,6 +48,7 @@ namespace DB
             }
             return base.SaveChanges();
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Seed Data

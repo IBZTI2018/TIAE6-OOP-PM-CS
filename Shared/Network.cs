@@ -1,5 +1,8 @@
 ﻿namespace Shared
 {
+    /// <summary>
+    /// Global static network configuration
+    /// </summary>
     class Network
     {
         public static string BASE_HOST = "http://localhost:";

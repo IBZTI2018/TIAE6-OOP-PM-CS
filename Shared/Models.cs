@@ -1,13 +1,14 @@
 ﻿using ProtoBuf;
-using Shared.Structures;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace Shared.Models
 {
+    /// <summary>
+    /// Base model that encapsulates generic attributes
+    /// </summary>
     public interface IBaseModel
     {
         public int id { get; set; }
@@ -38,6 +39,9 @@ namespace Shared.Models
         public DateTime modifiedAt { get; set; }
     }
 
+    /// <summary>
+    /// Natural person that may enter a tax report
+    /// </summary>
     [ProtoContract]
     public class Person : BaseModel
     {
@@ -66,6 +70,9 @@ namespace Shared.Models
         }
     }
 
+    /// <summary>
+    /// Municipality where a person can reside
+    /// </summary>
     [ProtoContract]
     public class Municipality : BaseModel
     {
@@ -73,6 +80,9 @@ namespace Shared.Models
         public string name { get; set; }
     }
 
+    /// <summary>
+    /// Street where a person can reside
+    /// </summary>
     [ProtoContract]
     public class Street : BaseModel
     {
@@ -90,6 +100,9 @@ namespace Shared.Models
         public Municipality municipality { get; set; }
     }
 
+    /// <summary>
+    /// A rule, also known as a node, in the inference or evaluation decision tree
+    /// </summary>
     [ProtoContract]
     [ProtoInclude(100, typeof(InferenceRule))]
     [ProtoInclude(200, typeof(EvaluationRule))]
@@ -118,6 +131,10 @@ namespace Shared.Models
     public class InferenceRule : Rule { }
     [ProtoContract]
     public class EvaluationRule : Rule { }
+
+    /// <summary>
+    /// Tax declaration of a person for a single year
+    /// </summary>
     [ProtoContract]
     public class TaxDeclaration : BaseModel
     {
@@ -201,6 +218,9 @@ namespace Shared.Models
         }
     }
 
+    /// <summary>
+    /// An attribute of a person's tax declaration
+    /// </summary>
     [ProtoContract]
     public class TaxDeclarationAttribute : BaseModel
     {
@@ -209,6 +229,9 @@ namespace Shared.Models
         public string name { get; set; }
     }
 
+    /// <summary>
+    /// A key-value entry of an attribute in a person's tax declaration
+    /// </summary>
     [ProtoContract]
     public class TaxDeclarationEntry : BaseModel
     {

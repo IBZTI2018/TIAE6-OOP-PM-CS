@@ -1,5 +1,8 @@
 ﻿using System.Runtime.Serialization;
 
+/// <summary>
+/// gRPC contract generic request and response models
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

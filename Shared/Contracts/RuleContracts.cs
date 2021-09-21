@@ -4,6 +4,9 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using Shared.Models;
 
+/// <summary>
+/// gRPC contract for the API providing rules and rule operations to worker nodes and the UI
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

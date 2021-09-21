@@ -4,6 +4,9 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.Threading.Tasks;
 
+/// <summary>
+/// gRPC contract for the API providing tax declaration operations to the UI
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

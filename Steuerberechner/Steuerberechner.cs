@@ -10,12 +10,17 @@ using Shared.Contracts;
 using ProtoBuf.Grpc.Client;
 
 namespace Steuerberechner {
+  /// <summary>
+  /// Tax calculator worker
+  /// </summary>
   class Steuerberechner {
     public static Steuerberechner shared = new Steuerberechner();
 
     private List<Rule> rules;
 
-    // Worker function to be started in a worker thread
+    /// <summary>
+    /// Worker function to be started in a worker thread
+    /// </summary>
     public static async void worker()
     {
       // Load all rules on startup
@@ -49,7 +54,9 @@ namespace Steuerberechner {
       }
     }
 
-    // Load all currently active rules from the database
+    /// <summary>
+    /// Load all currently active rules from the database
+    /// </summary>
     public async Task loadRulesFromDatabase()
     {
       Console.WriteLine("Loading rules from database...");
@@ -63,7 +70,11 @@ namespace Steuerberechner {
       }
     }
 
-    // Infer a dataset based on the stored rules
+    /// <summary>
+    /// Evaluate a dataset based on the stored rules
+    /// </summary>
+    /// <param name="input">Tax information of a person to evaluate</param>
+    /// <returns>Evaluated tax information of a person</returns>
     public TaxInformation evaluateDataset(TaxInformation input)
     {
       RuleData result = RuleTraversal.traverseRuleTree(this.rules, new RuleData(input.toVariableMap()));
@@ -75,6 +86,9 @@ namespace Steuerberechner {
       return output;
     }
 
+    /// <summary>
+    /// Persist evaluated tax information in the database.
+    /// </summary>
     public async Task putEvaluatedTaxInformation(TaxInformation input)
     {
       Console.WriteLine("Storing evaluated tax information in database...");

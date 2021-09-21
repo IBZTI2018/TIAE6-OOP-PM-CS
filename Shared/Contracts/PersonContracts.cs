@@ -4,6 +4,9 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using Shared.Models;
 
+/// <summary>
+/// gRPC contract for the API providing information about persons
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

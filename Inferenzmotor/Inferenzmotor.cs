@@ -10,12 +10,17 @@ using Shared.Contracts;
 using ProtoBuf.Grpc.Client;
 
 namespace Inferenzmotor {
+  /// <summary>
+  /// Tax inference worker
+  /// </summary>
   class Inferenzmotor {
     public static Inferenzmotor shared = new Inferenzmotor();
 
     private List<Rule> rules;
 
-    // Worker function to be started in a worker thread
+    /// <summary>
+    /// Worker function to be started in a worker thread
+    /// </summary>
     public static async void worker()
     {
       // Load all rules on startup
@@ -49,7 +54,9 @@ namespace Inferenzmotor {
       }
     }
 
-    // Load all currently active rules from the database
+    /// <summary>
+    /// Load all currently active rules from the database
+    /// </summary>
     public async Task loadRulesFromDatabase()
     {
       Console.WriteLine("Loading rules from database...");
@@ -63,7 +70,11 @@ namespace Inferenzmotor {
       }
     }
 
-    // Infer a dataset based on the stored rules
+    /// <summary>
+    /// Infer a dataset based on the stored rules
+    /// </summary>
+    /// <param name="input">Tax information of a person to infer</param>
+    /// <returns>Inferred tax information of a person</returns>
     public TaxInformation inferDataset(TaxInformation input)
     {
       RuleData result = RuleTraversal.traverseRuleTree(this.rules, new RuleData(input.toVariableMap()));
@@ -75,6 +86,9 @@ namespace Inferenzmotor {
       return output;
     }
 
+    /// <summary>
+    /// Persist inferred tax information in the database.
+    /// </summary>
     public async Task putInferredTaxInformation(TaxInformation input)
     {
       Console.WriteLine("Storing inferred tax information in database...");

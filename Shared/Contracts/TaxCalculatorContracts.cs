@@ -2,6 +2,9 @@
 using System.Threading.Tasks;
 using System.ServiceModel;
 
+/// <summary>
+/// gRPC contract for the API provided by the tax calculator node
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

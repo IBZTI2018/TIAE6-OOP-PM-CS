@@ -2,7 +2,9 @@
 using System.ServiceModel;
 using System.Threading.Tasks;
 
-
+/// <summary>
+/// gRPC contract for the API provided by the tax inference node
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace Shared.Structures
 {
+    /// <summary>
+    /// Flyweight wrapper of yearly tax data
+    /// </summary>
     [ProtoContract]
     public class YearlyTaxData
     {
@@ -49,6 +52,9 @@ namespace Shared.Structures
         public bool flagged = false;
     }
 
+    /// <summary>
+    /// Flyweight wrapper of a person's two-year tax data.
+    /// </summary>
     [ProtoContract]
     public class TaxInformation
     {
@@ -63,6 +69,11 @@ namespace Shared.Structures
         // Tax information for the current year
         public YearlyTaxData thisYear;
 
+        /// <summary>
+        /// Get tax information from a tree-processable dataset
+        /// </summary>
+        /// <param name="input">The dataset teo build the information from</param>
+        /// <returns>The built tax information object</returns>
         public static TaxInformation fromVariableMap(IEnumerable<KeyValuePair<string, object>> input)
         {
             TaxInformation t = new TaxInformation();
@@ -93,6 +104,10 @@ namespace Shared.Structures
             return t;
         }
 
+        /// <summary>
+        /// Get a tree-processable dataset from the tax information
+        /// </summary>
+        /// <returns>A dataset containing all information</returns>
         public Dictionary<string, object> toVariableMap()
         {
             // Use defaults when this is the first tax data from a user

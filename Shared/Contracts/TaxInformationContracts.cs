@@ -4,6 +4,9 @@ using System.ServiceModel;
 using System.Threading.Tasks;
 using Shared.Structures;
 
+/// <summary>
+/// gRPC contract for the API providing tax informations to worker nodes
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

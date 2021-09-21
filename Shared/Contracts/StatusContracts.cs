@@ -2,6 +2,9 @@
 using System.ServiceModel;
 using System.Threading.Tasks;
 
+/// <summary>
+/// gRPC contract for the API providing information about a service's status
+/// </summary>
 namespace Shared.Contracts
 {
     [DataContract]

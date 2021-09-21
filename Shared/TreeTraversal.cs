@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using Shared.Models;
 using CodingSeb.ExpressionEvaluator;
 
+/// <summary>
+/// Generic libary for building and traversing decision trees.
+/// </summary>
 namespace Shared.TreeTraversal {
 
     /// <summary>
@@ -12,6 +15,12 @@ namespace Shared.TreeTraversal {
     /// using the given input data.
     /// </summary>
     public class RuleParser {
+      /// <summary>
+      /// Evaluate a given script string as condition.
+      /// </summary>
+      /// <param name="script">The script string to execute</param>
+      /// <param name="input">The RuleData containing input variables</param>
+      /// <returns>Boolean indicator of wheter or not condition is true.</returns>
       public static bool evaluateAsCondition(string script, RuleData input)
       {
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
@@ -19,6 +28,12 @@ namespace Shared.TreeTraversal {
         return Convert.ToBoolean(evaluator.Evaluate(script));
       }
 
+      /// <summary>
+      /// Evaluate a given script as data transformation
+      /// </summary>
+      /// <param name="script">The script string to execute</param>
+      /// <param name="input">The RuleData containing input variables</param>
+      /// <returns>RuleData containing modified input variables</returns>
       public static RuleData evaluateAsTransformation(string script, RuleData input)
       {
         ExpressionEvaluator evaluator = new ExpressionEvaluator();
@@ -54,10 +69,16 @@ namespace Shared.TreeTraversal {
     /// applied, if any is specified.
     /// </summary>
     public class RuleTraversal {
+      /// <summary>
+      /// Automatically build and then traverse a decision tree based on a list of rules.
+      /// </summary>
+      /// <param name="rules">The list of rules in the tree</param>
+      /// <param name="data">The input dataset to pass through</param>
+      /// <returns>The output dataset of the decision tree</returns>
       public static RuleData traverseRuleTree(List<Rule> rules, RuleData data)
       {
         // First, we find the root node by finding the rule without a parent
-        Rule? rootNode = null;
+        Rule rootNode = null;
         Rule currentNode = null;
         Rule nextNode = null;
         List<Rule> children = new List<Rule>();
